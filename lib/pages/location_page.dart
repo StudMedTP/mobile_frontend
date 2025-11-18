@@ -81,25 +81,22 @@ class _LocationPageState extends State<LocationPage> {
                   urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                   subdomains: const ['a', 'b', 'c'],
                   userAgentPackageName: 'com.example.app',
-                  tileProvider: NetworkTileProvider(headers: {
-                    'User-Agent': 'mi-app/1.0 (joserodrigolopez@icloud.com)',
-                    'Referer': 'https://localhost'
-                  }),
                 ),
-                MarkerLayer(
-                  markers: [
-                    Marker(
-                      point: center,
-                      width: 80,
-                      height: 80,
-                      child: Icon(
-                        Icons.location_on,
-                        color: Colors.red,
-                        size: 48,
+                if (hasLocation)
+                  MarkerLayer(
+                    markers: [
+                      Marker(
+                        point: center,
+                        width: 80,
+                        height: 80,
+                        child: Icon(
+                          Icons.location_on,
+                          color: Colors.red,
+                          size: 48,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
               ],
             ),
           ),
