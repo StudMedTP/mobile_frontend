@@ -64,7 +64,7 @@ class _LocationPageState extends State<LocationPage> {
   @override
   Widget build(BuildContext context) {
     final hasLocation = _latitude != null && _longitude != null;
-    final center = hasLocation ? LatLng(_latitude!, _longitude!) : LatLng(0, 0);
+    final center = hasLocation ? LatLng(_latitude!, _longitude!) : LatLng(-12.078749, -77.040358);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Ejemplo ubicación')),
@@ -81,22 +81,25 @@ class _LocationPageState extends State<LocationPage> {
                   urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                   subdomains: const ['a', 'b', 'c'],
                   userAgentPackageName: 'com.example.app',
+                  tileProvider: NetworkTileProvider(headers: {
+                    'User-Agent': 'mi-app/1.0 (joserodrigolopez@icloud.com)',
+                    'Referer': 'https://localhost'
+                  }),
                 ),
-                if (hasLocation)
-                  MarkerLayer(
-                    markers: [
-                      Marker(
-                        point: center,
-                        width: 80,
-                        height: 80,
-                        child: Icon(
-                          Icons.location_on,
-                          color: Colors.red,
-                          size: 48,
-                        ),
+                MarkerLayer(
+                  markers: [
+                    Marker(
+                      point: center,
+                      width: 80,
+                      height: 80,
+                      child: Icon(
+                        Icons.location_on,
+                        color: Colors.red,
+                        size: 48,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
