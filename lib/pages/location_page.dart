@@ -82,7 +82,8 @@ class _LocationPageState extends State<LocationPage> {
                   subdomains: const ['a', 'b', 'c'],
                   userAgentPackageName: 'com.example.app',
                   tileProvider: NetworkTileProvider(headers: {
-                    'User-Agent': 'mi-app/1.0 (joserodrigolopez@icloud.com)'
+                    'User-Agent': 'mi-app/1.0 (joserodrigolopez@icloud.com)',
+                    'Referer': 'https://localhost'
                   }),
                 ),
                 if (hasLocation)
