@@ -40,16 +40,12 @@ class _LocationPageState extends State<LocationPage> {
 
     setState(() => _status = 'Obteniendo posición...');
     try {
-      Position pos = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
+      Position pos = await Geolocator.getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
       setState(() {
         _latitude = pos.latitude;
         _longitude = pos.longitude;
         _status = 'Posición obtenida';
       });
-      // También puedes imprimir en consola:
-      print('Latitud: $_latitude, Longitud: $_longitude');
     } catch (e) {
       setState(() => _status = 'Error: $e');
     }
