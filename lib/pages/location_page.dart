@@ -81,6 +81,9 @@ class _LocationPageState extends State<LocationPage> {
                   urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                   subdomains: const ['a', 'b', 'c'],
                   userAgentPackageName: 'com.example.app',
+                  tileProvider: NetworkTileProvider(headers: {
+                    'User-Agent': 'mi-app/1.0 (joserodrigolopez@icloud.com)'
+                  }),
                 ),
                 if (hasLocation)
                   MarkerLayer(
