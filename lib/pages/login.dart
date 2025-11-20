@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_frontend/layout/main_layout.dart';
 import 'package:mobile_frontend/pages/data/http_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,7 +14,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
     late SharedPreferences _prefs;
-    late HttpHelper httpHelper;
+    late HttpHelper httpHelper; 
     
     final TextEditingController usernameController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
@@ -39,11 +40,22 @@ class _LoginState extends State<Login> {
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                        Text("Bienvenido ${widget.user}"),
+                        Text("Bienvenido ${widget.user}", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+
+                        const SizedBox(height: 20),
+
+                        Image.asset(
+                          "images/StudMed.png",   // Usa el nombre de tu imagen
+                          width: 150,
+                          height: 150,
+                          
+                        ),
+
                         Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Container()
                         ),
+
                         SizedBox(
                             width: size.width * 0.80,
                             child: TextField(
@@ -51,7 +63,7 @@ class _LoginState extends State<Login> {
                                 decoration: const InputDecoration(
                                     contentPadding: EdgeInsets.all(8.0),
                                     filled: true,
-                                    fillColor: Color.fromRGBO(176, 202, 51, 0.75),
+                                    fillColor: Color(0xFF50B1D8),
                                     prefixIcon: Icon(
                                         Icons.person
                                     ),
@@ -76,7 +88,7 @@ class _LoginState extends State<Login> {
                                 decoration: const InputDecoration(
                                     contentPadding: EdgeInsets.all(8.0),
                                     filled: true,
-                                    fillColor: Color.fromRGBO(176, 202, 51, 0.75),
+                                    fillColor: Color(0xFF50B1D8),
                                     prefixIcon: Icon(
                                         Icons.lock
                                     ),
@@ -114,18 +126,20 @@ class _LoginState extends State<Login> {
                                             )
                                         );
                                     } else {
-                                        //Navigator.pushAndRemoveUntil(
-                                        //    context,
-                                        //    MaterialPageRoute(builder: (context) => response['user']['role'] == 'Administrador' ? const HomeAdmin() : const HomeUser(guest: false)),
-                                        //    (route) => false
-                                        //);
+                                        Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => const MainLayout()),
+                                            (route) => false
+                                        );
+                                        print(response);
+                                        
                                         await _prefs.setString('token', response['token']);
-                                        await _prefs.setString('role', response['user']['role']);
+                                        //await _prefs.setString('role', response['user']['role']);
                                     }
                                 }
                             },
                             style: ButtonStyle(
-                                backgroundColor: WidgetStateProperty.all<Color>(const Color.fromRGBO(176, 202, 51, 1)),
+                                backgroundColor: WidgetStateProperty.all<Color>(const Color(0xFF50B1D8)),
                                 foregroundColor: WidgetStateProperty.all<Color>(const Color.fromRGBO(10, 36, 63, 1))
                             ),
                             child: const Text('Ingresar')
@@ -145,22 +159,22 @@ class _LoginState extends State<Login> {
                                     //);
                                 },
                                 style: ButtonStyle(
-                                    foregroundColor: WidgetStateProperty.all<Color>(const Color.fromRGBO(176, 202, 51, 1)),
-                                    backgroundColor: WidgetStateProperty.all<Color>(const Color.fromRGBO(10, 36, 63, 1))
+                                    foregroundColor: WidgetStateProperty.all<Color>(const Color(0xFF50B1D8)),
+                                    backgroundColor: WidgetStateProperty.all<Color>(const Color.fromARGB(255, 255, 255, 255))
                                 ),
                                 child: const Text('Registrarse')
                             )
                     ]
                 )
             ),
-            floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                    Navigator.pop(context);
-                },
-                backgroundColor: const Color.fromRGBO(176, 202, 51, 1),
-                foregroundColor: const Color.fromRGBO(10, 36, 63, 1),
-                child: const Icon(Icons.arrow_back)
-            )
+            //floatingActionButton: FloatingActionButton(
+            //    onPressed: () {
+            //        Navigator.pop(context);
+            //    },
+            //    backgroundColor: const Color.fromRGBO(176, 202, 51, 1),
+            //    foregroundColor: const Color.fromRGBO(10, 36, 63, 1),
+            //    child: const Icon(Icons.arrow_back)
+            //)
         );
     }
 }

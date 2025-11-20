@@ -5,12 +5,12 @@ import 'package:http/http.dart' as http;
 
 class HttpHelper {
 
-  final String urlBase = 'https://studmed.aurumtech.site/user';
+  final String urlBase = 'https://studmed.aurumtech.site/api-gateway';
   
 
   Future<Map<String, dynamic>> login(String email, String password, String role) async {
       http.Response response = await http.post(
-          Uri.parse('$urlBase/users/login'),
+          Uri.parse('$urlBase/microservice-user/users/login'),
           headers: {
               'Content-Type': 'application/json',
           },
