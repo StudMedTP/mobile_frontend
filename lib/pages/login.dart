@@ -5,8 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 class Login extends StatefulWidget {
-    const Login({super.key, required this.user});
-    final String user;
+    const Login({super.key});
 
     @override
     State<Login> createState() => _LoginState();
@@ -21,18 +20,17 @@ class _LoginState extends State<Login> {
 
     Future initialize() async {
         _prefs = await SharedPreferences.getInstance();
+        httpHelper = HttpHelper();
     }
 
     @override
-    void initState(){
-        httpHelper = HttpHelper();
+    void initState() {
         initialize();
         super.initState();
     }
 
     @override
     Widget build(BuildContext context) {
-        bool isAdmin = widget.user == "Administrador";
         final size = MediaQuery.of(context).size;
 
         return Scaffold(
@@ -40,22 +38,17 @@ class _LoginState extends State<Login> {
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                        Text("Bienvenido ${widget.user}", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-
+                        Text("Bienvenido", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                         const SizedBox(height: 20),
-
                         Image.asset(
-                          "images/StudMed.png",   // Usa el nombre de tu imagen
+                          'assets/StudMed.png',
                           width: 150,
                           height: 150,
-                          
                         ),
-
                         Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Container()
                         ),
-
                         SizedBox(
                             width: size.width * 0.80,
                             child: TextField(
@@ -107,34 +100,29 @@ class _LoginState extends State<Login> {
                         ),
                         ElevatedButton(
                             onPressed: () async {
-                                if (context.mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text('Iniciando sesion...'),
-                                            duration: Duration(seconds: 10)
-                                        )
-                                    );
-                                }
-                                final Map<String, dynamic> response = await httpHelper.login(usernameController.text, passwordController.text, widget.user);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Iniciando sesion...'),
+                                    )
+                                );
+                                final Map<String, dynamic> response = await httpHelper.login(usernameController.text, passwordController.text);
                                 if (context.mounted) {
                                     ScaffoldMessenger.of(context).clearSnackBars();
                                     if (response['status'] == 'error') {
                                         ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
-                                                content: Text(response['message']),
+                                                content: Text(response['error']),
                                                 duration: const Duration(seconds: 3),
                                             )
                                         );
                                     } else {
                                         Navigator.pushAndRemoveUntil(
                                             context,
-                                            MaterialPageRoute(builder: (context) => const MainLayout()),
+                                            MaterialPageRoute(builder: (context) => response['role'] == 'STUDENT' ? const MainLayout() : const MainLayout()),
                                             (route) => false
                                         );
-                                        print(response);
-                                        
                                         await _prefs.setString('token', response['token']);
-                                        //await _prefs.setString('role', response['user']['role']);
+                                        await _prefs.setString('role', response['role']);
                                     }
                                 }
                             },
@@ -148,33 +136,9 @@ class _LoginState extends State<Login> {
                             padding: const EdgeInsets.all(8.0),
                             child: Container()
                         ),
-                        if (!isAdmin)
-                            ElevatedButton(
-                                onPressed: () {
-                                    //Navigator.push(
-                                    //    context,
-                                    //    MaterialPageRoute(
-                                    //        builder: (context) => const Register()
-                                    //    )
-                                    //);
-                                },
-                                style: ButtonStyle(
-                                    foregroundColor: WidgetStateProperty.all<Color>(const Color(0xFF50B1D8)),
-                                    backgroundColor: WidgetStateProperty.all<Color>(const Color.fromARGB(255, 255, 255, 255))
-                                ),
-                                child: const Text('Registrarse')
-                            )
                     ]
                 )
-            ),
-            //floatingActionButton: FloatingActionButton(
-            //    onPressed: () {
-            //        Navigator.pop(context);
-            //    },
-            //    backgroundColor: const Color.fromRGBO(176, 202, 51, 1),
-            //    foregroundColor: const Color.fromRGBO(10, 36, 63, 1),
-            //    child: const Icon(Icons.arrow_back)
-            //)
+            )
         );
     }
 }
