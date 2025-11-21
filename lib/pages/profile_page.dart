@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_frontend/pages/start.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -8,10 +10,46 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  late SharedPreferences _prefs;
+
+  Future initialize() async {
+    _prefs = await SharedPreferences.getInstance();
+  }
+
+  @override
+  void initState() {
+    initialize();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text("Profile Page"),
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Profile Page"),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Start()
+                  )
+                );
+                await _prefs.remove('token');
+                await _prefs.remove('role');
+              },
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all<Color>(const Color.fromRGBO(30, 161, 210, 1)),
+                foregroundColor: WidgetStateProperty.all<Color>(const Color.fromRGBO(10, 36, 63, 1))
+              ),
+              child: const Text('Cerrar Sesión')
+            )
+          ]
+        ),
+      ),
     );
   }
 }

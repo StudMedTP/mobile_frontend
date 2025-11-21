@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_frontend/layout/main_layout.dart';
+import 'package:mobile_frontend/layout/main_layout_teacher.dart';
 import 'package:mobile_frontend/pages/data/http_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -118,7 +119,7 @@ class _LoginState extends State<Login> {
                                     } else {
                                         Navigator.pushAndRemoveUntil(
                                             context,
-                                            MaterialPageRoute(builder: (context) => response['role'] == 'STUDENT' ? const MainLayout() : const MainLayout()),
+                                            MaterialPageRoute(builder: (context) => response['role'] == 'STUDENT' ? const MainLayout() : const MainLayoutTeacher()),
                                             (route) => false
                                         );
                                         await _prefs.setString('token', response['token']);
