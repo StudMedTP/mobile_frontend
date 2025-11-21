@@ -13,15 +13,8 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-
-      // Pantalla inicial (login)
       home: const Login(user: "Administrador"),
 
-      // Rutas internas
-      //routes: {
-      //  "/main": (context) => const MainLayout(),     // <--- AQUÍ YA NO VA "child"
-      //  "/login": (context) => const Login(user: "Administrador"),
-      //},
     );
   }
 }

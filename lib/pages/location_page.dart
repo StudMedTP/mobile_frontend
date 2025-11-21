@@ -67,7 +67,7 @@ class _LocationPageState extends State<LocationPage> {
     final center = hasLocation ? LatLng(_latitude!, _longitude!) : LatLng(-12.078749, -77.040358);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Ejemplo ubicación')),
+      appBar: AppBar(title: const Text('Ubicación')),
       body: Column(
         children: [
           Expanded(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_frontend/pages/attendance_user_page.dart';
 import 'package:mobile_frontend/pages/notification_page.dart';
+import 'package:mobile_frontend/pages/practice_page.dart';
 import 'package:mobile_frontend/pages/profile_page.dart';
 import '../pages/home_page.dart';
 import '../pages/location_page.dart';
@@ -15,18 +16,19 @@ class MainLayout extends StatefulWidget {
 class _MainLayoutState extends State<MainLayout> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  int _currentIndex = 0; 
-  // Empezamos en HOME (que estará en el index 1)
+  int _bottomIndex = 1;   // navbar (1 = Home)
+  int _pageIndex = 0;     // página real del stack
 
-  // --------------------------
+  // -----------------------------------------
   // PÁGINAS DE LA APP
-  // --------------------------
+  // -----------------------------------------
   final List<Widget> _pages = const [
-    HomePage(),         // index 0
-    LocationPage(),     // index 1
-    NotificationPage(), // index 2
-    ProfilePage(),      // index 3
-    AttendanceUserPage(), // index 4
+    HomePage(),           // 0
+    LocationPage(),       // 1
+    NotificationPage(),   // 2
+    ProfilePage(),        // 3
+    AttendanceUserPage(), // 4
+    PracticePage()        // 5
   ];
 
   @override
@@ -35,16 +37,16 @@ class _MainLayoutState extends State<MainLayout> {
       key: _scaffoldKey,
       drawer: _buildSideBar(),
       body: IndexedStack(
-        index: _currentIndex,
+        index: _pageIndex,
         children: _pages,
       ),
       bottomNavigationBar: _buildNavbar(),
     );
   }
 
-  // --------------------------
-  // NAVBAR INFERIOR
-  // --------------------------
+  // -----------------------------------------
+  // NAVBAR
+  // -----------------------------------------
   Widget _buildNavbar() {
     return BottomNavigationBar(
       backgroundColor: Colors.lightBlue[200],
@@ -53,7 +55,7 @@ class _MainLayoutState extends State<MainLayout> {
       unselectedItemColor: Colors.black,
       showSelectedLabels: false,
       showUnselectedLabels: false,
-      currentIndex: _currentIndex,
+      currentIndex: _bottomIndex,
       onTap: (index) {
         if (index == 0) {
           _scaffoldKey.currentState?.openDrawer();
@@ -61,8 +63,8 @@ class _MainLayoutState extends State<MainLayout> {
         }
 
         setState(() {
-          _currentIndex = index - 1; 
-          // Como agregamos el menú al inicio, restamos 1
+          _bottomIndex = index;
+          _pageIndex = index - 1; // 1=Home->0, 2->1, etc.
         });
       },
       items: const [
@@ -75,9 +77,9 @@ class _MainLayoutState extends State<MainLayout> {
     );
   }
 
-  // --------------------------
-  // SIDEBAR (DRAWER)
-  // --------------------------
+  // -----------------------------------------
+  // DRAWER
+  // -----------------------------------------
   Widget _buildSideBar() {
     return Drawer(
       child: Container(
@@ -99,14 +101,20 @@ class _MainLayoutState extends State<MainLayout> {
 
             _drawerItem(Icons.checklist, "Control de Asistencia", () {
               Navigator.pop(context);
-              setState(() => _currentIndex = 4);
+              setState(() {
+                _pageIndex = 4;   // Ir a AttendanceUserPage()
+                _bottomIndex = 1; // Mantener navbar en HOME
+              });
             }),
 
             const SizedBox(height: 20),
 
             _drawerItem(Icons.assignment, "Evaluaciones", () {
               Navigator.pop(context);
-              setState(() => _currentIndex = 0);
+              setState(() {
+                _pageIndex = 5;   // Ir a PracticePage()
+                _bottomIndex = 1; // navbar se queda en HOME
+              });
             }),
           ],
         ),
@@ -125,4 +133,5 @@ class _MainLayoutState extends State<MainLayout> {
     );
   }
 }
+
 
