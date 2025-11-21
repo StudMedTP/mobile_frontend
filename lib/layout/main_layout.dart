@@ -23,10 +23,10 @@ class _MainLayoutState extends State<MainLayout> {
   // PÁGINAS DE LA APP
   // -----------------------------------------
   final List<Widget> _pages = const [
-    HomePage(),           // 0
+    HomePage(role: "Student"),           // 0
     LocationPage(),       // 1
-    NotificationPage(),   // 2
-    ProfilePage(),        // 3
+    NotificationPage(role: "Student"),   // 2
+    ProfilePage(role: "Student"),        // 3
     AttendanceUserPage(), // 4
     PracticePage()        // 5
   ];

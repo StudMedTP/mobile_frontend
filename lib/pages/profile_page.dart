@@ -3,7 +3,8 @@ import 'package:mobile_frontend/pages/start.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key, required this.role});
+  final String role;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -29,7 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Profile Page"),
+            Text("Profile Page ${widget.role}"),
             ElevatedButton(
               onPressed: () async {
                 Navigator.pushReplacement(

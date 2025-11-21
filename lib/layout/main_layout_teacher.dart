@@ -20,9 +20,9 @@ class _MainLayoutTeacherState extends State<MainLayoutTeacher> {
   // PÁGINAS DE LA APP
   // -----------------------------------------
   final List<Widget> _pages = const [
-    HomePage(),           // 0
-    NotificationPage(),   // 2
-    ProfilePage(),        // 3
+    HomePage(role: "Teacher"),           // 0
+    NotificationPage(role: "Teacher"),   // 2
+    ProfilePage(role: "Teacher"),        // 3
   ];
 
   @override

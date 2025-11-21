@@ -6,9 +6,8 @@ import 'package:http/http.dart' as http;
 class HttpHelper {
 
   final String urlBase = 'https://studmed.aurumtech.site/api-gateway';
-  
 
-  Future<Map<String, dynamic>> login(String email, String password, String role) async {
+  Future<Map<String, dynamic>> login(String email, String password) async {
       http.Response response = await http.post(
           Uri.parse('$urlBase/microservice-user/users/login'),
           headers: {
@@ -27,15 +26,18 @@ class HttpHelper {
       }
   }
 
-  Future<Map<String, dynamic>> register(String firstName, String lastName, String email, String password, String userImg) async {
+  Future<Map<String, dynamic>> register(String firstName, String lastName, String email, String password) async {
       http.Response response = await http.post(
-          Uri.parse('$urlBase/microservice-user/users'), body: {
+          Uri.parse('$urlBase/microservice-user/users'),
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: json.encode({
               "firstName": firstName,
               "lastName": lastName,
               "email": email,
-              "password": password,
-              "userImg": userImg
-          }
+              "password": password
+          })
       );
       try {
           final Map<String, dynamic> jsonResponse = json.decode(response.body);
@@ -44,8 +46,4 @@ class HttpHelper {
           return { 'status': 'error', 'message': 'Error en la peticion' };
       }
   }
-
-
-
-
 }
