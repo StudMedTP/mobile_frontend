@@ -26,7 +26,7 @@ class _MainLayoutState extends State<MainLayout> {
     super.initState();
     _pages = [
       const HomePage(role: "Student"),            // 0
-      const LocationPage(),                             // 1
+      const LocationPage(),                       // 1
       const NotificationPage(role: "Student"),    // 2
       const ProfilePage(role: "Student"),         // 3
       const AttendanceUserPage(),                 // 4
@@ -39,12 +39,14 @@ class _MainLayoutState extends State<MainLayout> {
   //
   //Controlador para camnbiar pantallas desde un boton o a otra pagina 
   // desde una pagina del navbar y mantener el navbar y drawer funcionales
-  void _goToPage(int index) {
-    setState(() {
-      _pageIndex = index;
-      _bottomIndex = 1; // navbar se queda en HOME
-    });
-  }
+
+  // ---------------Navegación desde paginas hijas----------------
+  //void _goToPage(int index) {
+  //  setState(() {
+  //    _pageIndex = index;
+  //    _bottomIndex = 1; // navbar se queda en HOME
+  //  });
+  //}
 
   //---------------Lista original de paginas----------------
   //
