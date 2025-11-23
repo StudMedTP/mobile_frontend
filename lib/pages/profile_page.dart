@@ -56,43 +56,6 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
   }
 
-  //@override
-  //Widget build(BuildContext context) {
-  //  return Scaffold(
-  //    body: Center(
-  //      child: Column(
-  //        mainAxisAlignment: MainAxisAlignment.center,
-  //        children: [
-  //          Text("Profile Page ${widget.role}"),
-//
-//
-  //          ElevatedButton(
-  //            onPressed: () async {
-  //              Navigator.pushReplacement(
-  //                context,
-  //                MaterialPageRoute(
-  //                  builder: (context) => const Start()
-  //                )
-  //              );
-  //              await _prefs.remove('token');
-  //              await _prefs.remove('role');
-  //            },
-  //            style: ButtonStyle(
-  //              backgroundColor: WidgetStateProperty.all<Color>(const Color(0xFF448AFF)),
-  //              foregroundColor: WidgetStateProperty.all<Color>(const Color.fromRGBO(10, 36, 63, 1))
-  //            ),
-  //            child: const Text('Cerrar Sesión')
-  //          )
-//
-//
-  //          
-  //        ]
-  //      ),
-  //    ),
-  //  );
-  //}
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,6 +75,46 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                                 
                 const SizedBox(height: 25),
+
+
+
+                Container(
+                  padding: const EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 207, 207, 207)
+                    ),
+                    borderRadius: const BorderRadius.all(Radius.circular(10))
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Nombre: ${user?.firstName}"),
+                      Text("Apellido: ${user?.lastName}"),
+                      Text("Email: ${user?.email}"),
+                      Text("Rol: ${user?.role}")
+                    ]
+                  )
+                ),
+
+                if (widget.role == "TEACHER")
+                ElevatedButton(
+                  onPressed: () async {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Start()
+                      )
+                    );
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all<Color>(const Color(0xFF448AFF)),
+                    foregroundColor: WidgetStateProperty.all<Color>(const Color.fromRGBO(10, 36, 63, 1))
+                  ),
+                  child: const Text('Open class session page')
+                ),
+                
+                SizedBox(height: 25),
 
                 ElevatedButton(
                   onPressed: () async {
