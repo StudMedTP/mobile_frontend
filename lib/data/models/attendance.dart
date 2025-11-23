@@ -19,7 +19,9 @@ class Attendance{
     required this.student,
     required this.medicalcenter,
     required this.status,
-    required this.date
+    required this.date,
+    required this.latitude,
+    required this.longitude
   });
 
   Attendance.fromJson(Map<String, dynamic> json){
