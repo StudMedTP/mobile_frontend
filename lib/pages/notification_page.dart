@@ -28,9 +28,7 @@ class _NotificationPageState extends State<NotificationPage> {
                   ),
                 ),
 
-
                 const SizedBox(height: 25),
-
 
                 // ===================== TARJETA 1 =====================
                 _buildNotificationCard(
@@ -53,16 +51,12 @@ class _NotificationPageState extends State<NotificationPage> {
                   icon: Icons.assignment_late_rounded,
                   text: "Nueva Práctica Pendiente",
                 ),
-
-              
               ],
             ),
           ),
         ),
       ),
     );
-
-
   }
 
   Widget _buildNotificationCard({required IconData icon, required String text}) {

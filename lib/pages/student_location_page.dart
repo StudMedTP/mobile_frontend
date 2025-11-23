@@ -32,7 +32,6 @@ class _StudentLocationPageState extends State<StudentLocationPage> {
 
             const SizedBox(height: 25),
 
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
@@ -73,8 +72,7 @@ class _StudentLocationPageState extends State<StudentLocationPage> {
                   ),
                   children: [
                     TileLayer(
-                      urlTemplate:
-                          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                       subdomains: const ['a', 'b', 'c'],
                       userAgentPackageName: 'com.example.app',
                       tileProvider: NetworkTileProvider(headers: {

@@ -33,12 +33,10 @@ class _MainLayoutTeacherState extends State<MainLayoutTeacher> {
       const NotificationPage(role: "Teacher"),          // 1
       const ProfilePage(role: "Teacher"),               // 2
       StudentsListPage(onNavegate: _goToPage),          // 3
-      const AttendanceControlPage(role:   "Teacher"),   // 4
+      const AttendanceControlPage(),                    // 4
       const StudentLocationPage(),                      // 5
-      
     ];
   }
-
 
   // Controlador para camnbiar pantallas desde un boton o a otra pagina 
   // desde una pagina del navbar y mantener el navbar y drawer funcionales
@@ -48,8 +46,6 @@ class _MainLayoutTeacherState extends State<MainLayoutTeacher> {
       _bottomIndex = 1; // navbar se queda en HOME
     });
   }
-
-
 
   //---------------Lista original de paginas----------------
   //

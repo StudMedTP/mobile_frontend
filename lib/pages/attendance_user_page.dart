@@ -11,7 +11,6 @@ class _AttendanceUserPageState extends State<AttendanceUserPage> {
 
   final TextEditingController _codigoController = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,8 +108,6 @@ class _AttendanceUserPageState extends State<AttendanceUserPage> {
 
             const SizedBox(height: 20),
 
-
-
             // ---------------- Ingresar Codigo Diario ----------------
 
             Align(
@@ -145,13 +142,12 @@ class _AttendanceUserPageState extends State<AttendanceUserPage> {
 
             const SizedBox(height: 20),
 
-
-              const Text(
-                "Si no se encuentra en la ubicación de su práctica, "
-                "por favor intente más tarde cuando se encuentre en su ubicación para evitar una asistencia errónea.",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16),
-              ),
+            const Text(
+              "Si no se encuentra en la ubicación de su práctica, "
+              "por favor intente más tarde cuando se encuentre en su ubicación para evitar una asistencia errónea.",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16),
+            ),
 
             // ---------------- Botones ----------------
 

@@ -7,7 +7,6 @@ class StudentsListPage extends StatefulWidget {
 
   final void Function(int pageIndex) onNavegate;
 
-
   @override
   State<StudentsListPage> createState() => _StudentsListPageState();
 }
@@ -18,8 +17,7 @@ class _StudentsListPageState extends State<StudentsListPage> {
   late Map<String, dynamic> studentsResponse;  
 
   List<Student>? classes;
-  
-  
+
   bool loading = true;
   
   //child: Text("HOME ${widget.role}"),
@@ -45,7 +43,6 @@ class _StudentsListPageState extends State<StudentsListPage> {
   //    }
   //}
 
-
   @override
   void initState(){
     super.initState();
@@ -54,7 +51,6 @@ class _StudentsListPageState extends State<StudentsListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -70,30 +66,31 @@ class _StudentsListPageState extends State<StudentsListPage> {
                   ),
                 ),
 
-
                 const SizedBox(height: 25),
 
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
-                  
                   decoration: BoxDecoration(
                     color: Colors.lightBlue[200],
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-
                     children: [
-                      Text("Nombre: ",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text(
+                        "Nombre: ",
+                        style: TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold
+                        )
+                      ),
 
                       SizedBox(height: 10),
 
-                      Text("Apellido:", 
-                        style: TextStyle(fontSize: 18)),
+                      Text(
+                        "Apellido:", 
+                        style: TextStyle(fontSize: 18)
+                      ),
 
                       SizedBox(height: 10),
                       
@@ -102,10 +99,10 @@ class _StudentsListPageState extends State<StudentsListPage> {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor:Colors.blueAccent,
-                            padding:
-                              const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
+                              borderRadius: BorderRadius.circular(15)
+                            ),
                           ),
                           onPressed: () {
                             _showFirstPopup(context);
@@ -132,35 +129,29 @@ class _StudentsListPageState extends State<StudentsListPage> {
     showDialog(
       context: context,
       builder: (context) {
-
         final double screenWidth = MediaQuery.of(context).size.width;
 
         return AlertDialog(
-
           backgroundColor: Colors.lightBlue[200],
-
           insetPadding: const EdgeInsets.symmetric(
             horizontal: 15,
             vertical: 24,
           ),
-
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20)),
+            borderRadius: BorderRadius.circular(20)
+          ),
           contentPadding: const EdgeInsets.all(20),
-
           content: SizedBox(
             width: screenWidth * 0.9,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-              
                 Center(
                   child: const Text(
                     "Alumno",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-  
                 ),
                 const SizedBox(height: 20),
   
@@ -192,21 +183,17 @@ class _StudentsListPageState extends State<StudentsListPage> {
                   children: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.red,
                         foregroundColor: Colors.white,
                       ),
-                
-                      child:
-                          const Text("Regresar", style: TextStyle(fontSize: 18)),
+                      child: const Text("Regresar", style: TextStyle(fontSize: 18)),
                     ),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
                         //mostrar pantalla nueva
                         widget.onNavegate(5);
-  
                       },
                       style: TextButton.styleFrom(
                         backgroundColor: const Color(0xFF448AFF),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AttendanceControlPage extends StatefulWidget {
-  const AttendanceControlPage({super.key, required this.role});
-  final String role;
+  const AttendanceControlPage({super.key});
 
   @override
   State<AttendanceControlPage> createState() => _AttendanceControlPageState();
@@ -26,14 +25,13 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20),
-            
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Align(
                   alignment: Alignment.center,
                   child: Text(
-                    "Control de Asistencia - ${widget.role}",
+                    "Control de Asistencia",
                     style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -45,10 +43,10 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF448AFF),
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 15, horizontal: 25),
+                      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 25),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
+                        borderRadius: BorderRadius.circular(15)
+                      ),
                     ),
                     onPressed: () {
                       _showFirstPopup(context);
@@ -66,15 +64,12 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
-                  
                   decoration: BoxDecoration(
                     color: Colors.lightBlue[200],
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-
                     children: [
                       Center(
                         child: const Text(
@@ -85,16 +80,19 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
 
                       SizedBox(height: 10),
 
-                      Text("Nombre:", 
-                        style: TextStyle(fontSize: 18)),
+                      Text(
+                        "Nombre:", 
+                        style: TextStyle(fontSize: 18)
+                      ),
 
                       SizedBox(height: 10),
                       
-                      Text("Apellido:", 
-                        style: TextStyle(fontSize: 18)),
+                      Text(
+                        "Apellido:", 
+                        style: TextStyle(fontSize: 18)
+                      ),
 
                       SizedBox(height: 5),
-                      
                     ],
                   ),
                 ),
@@ -112,30 +110,22 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.lightBlue[200],
-
         insetPadding: const EdgeInsets.symmetric(
           horizontal: 15,
           vertical: 24,
         ),
-
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         contentPadding: const EdgeInsets.all(20),
-
         content:StatefulBuilder(
           builder: (context, setStateDialog) {
-
             final screenWidth = MediaQuery.of(context).size.width;
-
             return SingleChildScrollView(
-
               child: SizedBox(
                 width:  screenWidth * 0.9,
-
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  
                     Center(
                       child: const Text(
                         "Asignar Nueva Practica",
@@ -163,12 +153,10 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
                           isExpanded: true,
                           icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
                           dropdownColor: const Color(0xFF448AFF),
-
                           style: const TextStyle(
                             color: Colors.white,   // texto blanco cuando hay valor seleccionado
                             fontSize: 16,
                           ),
-
                           hint: const Text(
                             "Seleccione un alumno",
                             style: TextStyle(color: Colors.white),
@@ -179,13 +167,13 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
                             });
                           },
                           items: _alumnos
-                              .map(
-                                (alumno) => DropdownMenuItem<String>(
-                                  value: alumno,
-                                  child: Text(alumno),
-                                ),
-                              )
-                              .toList(),
+                            .map(
+                              (alumno) => DropdownMenuItem<String>(
+                                value: alumno,
+                                child: Text(alumno),
+                              ),
+                            )
+                            .toList(),
                         ),
                       ),
                     ),
@@ -210,12 +198,10 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
                           isExpanded: true,
                           icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
                           dropdownColor: const Color(0xFF448AFF),
-                          
                           style: const TextStyle(
                             color: Colors.white,   // texto blanco cuando hay valor seleccionado
                             fontSize: 16,
                           ),
-                          
                           hint: const Text(
                             "Seleccione un centro médico",
                             style: TextStyle(color: Colors.white),
@@ -226,13 +212,13 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
                             });
                           },
                           items: _centros
-                              .map(
-                                (centro) => DropdownMenuItem<String>(
-                                  value: centro,
-                                  child: Text(centro),
-                                ),
-                              )
-                              .toList(),
+                            .map(
+                              (centro) => DropdownMenuItem<String>(
+                                value: centro,
+                                child: Text(centro),
+                              ),
+                            )
+                            .toList(),
                         ),
                       ),
                     ),
@@ -293,8 +279,7 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
                       onTap: () async {
                         final picked = await showTimePicker(
                           context: context,
-                          initialTime:
-                              _selectedTime ?? TimeOfDay.fromDateTime(DateTime.now()),
+                          initialTime: _selectedTime ?? TimeOfDay.fromDateTime(DateTime.now()),
                         );
                         if (picked != null) {
                           setStateDialog(() {

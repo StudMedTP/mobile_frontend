@@ -13,7 +13,6 @@ class _PracticePageState extends State<PracticePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -28,7 +27,6 @@ class _PracticePageState extends State<PracticePage> {
                   ),
                 ),
 
-
                 const SizedBox(height: 25),
 
                 Container(
@@ -38,14 +36,9 @@ class _PracticePageState extends State<PracticePage> {
                     color: Colors.lightBlue[200],
                     borderRadius: BorderRadius.circular(20),
                   ),
-
-
-
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
-
                       Center(
                         child: const Text(
                           "Práctica de Cardiología",
@@ -54,11 +47,7 @@ class _PracticePageState extends State<PracticePage> {
                             fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
-
-
                       const SizedBox(height: 15),
-
-
                       Align(
                         alignment: Alignment.center,
                         child: ElevatedButton(
@@ -78,8 +67,6 @@ class _PracticePageState extends State<PracticePage> {
                             style: TextStyle(fontSize: 18, color: Colors.white),),
                         ),
                       ),
-
-
                     ],
                   ),
                 ),
