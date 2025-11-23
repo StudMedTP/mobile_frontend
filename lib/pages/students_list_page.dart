@@ -115,55 +115,58 @@ class _StudentItemState extends State<StudentItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.lightBlue[200],
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        
-        children: [          
-          Text(
-            "Nombre: ${widget.student.user.firstName}",
-            style: TextStyle(
-              fontSize: 20, fontWeight: FontWeight.bold
-            )
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.lightBlue[200],
+            borderRadius: BorderRadius.circular(20),
           ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            
+            children: [          
+              Text(
+                "Nombre: ${widget.student.user.firstName}",
+                style: TextStyle(
+                  fontSize: 20, fontWeight: FontWeight.bold
+                )
+              ),
 
-          SizedBox(height: 10),
+              SizedBox(height: 10),
 
-          Text(
-            "Apellido: ${widget.student.user.lastName}", 
-            style: TextStyle(fontSize: 18)
-          ),
+              Text(
+                "Apellido: ${widget.student.user.lastName}", 
+                style: TextStyle(fontSize: 18)
+              ),
 
-          SizedBox(height: 10),
-          
-          Align(
-            alignment: Alignment.centerRight ,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor:Colors.blueAccent,
-                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)
+              SizedBox(height: 10),
+              
+              Align(
+                alignment: Alignment.centerRight ,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:Colors.blueAccent,
+                    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)
+                    ),
+                  ),
+                  onPressed: _getLastAttendance,
+                  child: const Text(
+                    "ver datos",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
                 ),
               ),
-              onPressed: _getLastAttendance,
-              child: const Text(
-                "ver datos",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, color: Colors.white),
-              ),
-            ),
+            ],
           ),
-          //const SizedBox(height: 25),
-        ],
-        
-      ),
+        ),
+        const SizedBox(height: 15),
+      ],
     );
   }
 
