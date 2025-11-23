@@ -131,15 +131,17 @@ class HttpHelper {
     }
   }
 
-  Future<Map<String, dynamic>> createAssitance(int studentId, int medicalCenterId) async {
+  Future<Map<String, dynamic>> createAssitance(int studentId, int medicalCenterId, DateTime date) async {
+    print(date.toIso8601String());
     http.Response response = await http.post(
-        Uri.parse('$urlBase/microservice-attendance/attendances'),
+        Uri.parse('$urlBase/microservice-attendance/attendance'),
         headers: {
             'Content-Type': 'application/json',
         },
         body: json.encode({
             "studentId": studentId,
-            "medicalCenterId": medicalCenterId
+            "medicalCenterId": medicalCenterId,
+            "date": date.toIso8601String(),
         })
     );
     try {

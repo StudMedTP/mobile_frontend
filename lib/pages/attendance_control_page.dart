@@ -294,8 +294,8 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
                         final picked = await showDatePicker(
                           context: context,
                           initialDate: _selectedDate ?? today,
-                          firstDate: DateTime(2020),
-                          lastDate: DateTime(2100),
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(2026, 12, 31),
                         );
                         if (picked != null) {
                           setStateDialog(() {
@@ -395,7 +395,8 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
                                   duration: Duration(seconds: 30),
                                 )
                               );
-                              final Map<String, dynamic> response = await httpHelper.createAssitance(_selectedAlumno!, _selectedCentro!);
+                              DateTime dateTime = DateTime( _selectedDate!.year, _selectedDate!.month, _selectedDate!.day, _selectedTime!.hour, _selectedTime!.minute,);
+                              final Map<String, dynamic> response = await httpHelper.createAssitance(_selectedAlumno!, _selectedCentro!, dateTime);
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).clearSnackBars();
                                 if (response['status'] == 'error') {
