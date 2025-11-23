@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_frontend/data/models/medicalCenter.dart';
+import 'package:mobile_frontend/data/models/student.dart';
+import 'package:mobile_frontend/pages/data/http_helper.dart';
 
 class AttendanceControlPage extends StatefulWidget {
   const AttendanceControlPage({super.key});
@@ -8,15 +11,66 @@ class AttendanceControlPage extends StatefulWidget {
 }
 
 class _AttendanceControlPageState extends State<AttendanceControlPage> {
-  
-  final List<String> _alumnos = ['Alumno 1', 'Alumno 2', 'Alumno 3'];
-  final List<String> _centros = ['Centro 1', 'Centro 2', 'Centro 3'];
+  late HttpHelper httpHelper;
 
   // Valores seleccionados
-  String? _selectedAlumno;
-  String? _selectedCentro;
+  int? _selectedAlumno;
+  int? _selectedCentro;
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
+
+  late Map<String, dynamic> studentsResponse;
+  late Map<String, dynamic> medicalCentersResponse;
+
+  List<Student>? students;
+  List<MedicalCenter>? medicalCenters;
+
+  bool loading = true;
+
+  Future initialize() async {
+    httpHelper = HttpHelper();
+    studentsResponse = await httpHelper.getAllMyStudents();
+    if (studentsResponse['status'] == 'error') {
+      if (!mounted) return;
+      setState(() {
+        loading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(studentsResponse['error']),
+          duration: const Duration(seconds: 3),
+        )
+      );
+    } else {
+      final List studentsMap = studentsResponse['students'];
+      students = studentsMap.map((classJson) => Student.fromJson(classJson)).toList();
+      medicalCentersResponse = await httpHelper.getAllMedicalCenters();
+      if (medicalCentersResponse['status'] == 'error') {
+        if (!mounted) return;
+        setState(() {
+          loading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(medicalCentersResponse['error']),
+            duration: const Duration(seconds: 3),
+          )
+        );
+      } else {
+        final List medicalCentersMap = medicalCentersResponse['medicalCenters'];
+        medicalCenters = medicalCentersMap.map((classJson) => MedicalCenter.fromJson(classJson)).toList();
+        setState(() {
+          loading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  void initState(){
+    initialize();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +81,11 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
             padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+              children: loading ? [
+                Center(
+                  child: const CircularProgressIndicator(),
+                ),
+              ] : [
                 Align(
                   alignment: Alignment.center,
                   child: Text(
@@ -148,7 +206,7 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
+                        child: DropdownButton<int>(
                           value: _selectedAlumno,
                           isExpanded: true,
                           icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
@@ -166,11 +224,10 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
                               _selectedAlumno = value;
                             });
                           },
-                          items: _alumnos
-                            .map(
-                              (alumno) => DropdownMenuItem<String>(
-                                value: alumno,
-                                child: Text(alumno),
+                          items: students?.map(
+                              (student) => DropdownMenuItem<int>(
+                                value: student.id,
+                                child: Text('${student.user.firstName} ${student.user.lastName}'),
                               ),
                             )
                             .toList(),
@@ -193,7 +250,7 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
+                        child: DropdownButton<int>(
                           value: _selectedCentro,
                           isExpanded: true,
                           icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
@@ -211,11 +268,11 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
                               _selectedCentro = value;
                             });
                           },
-                          items: _centros
-                            .map(
-                              (centro) => DropdownMenuItem<String>(
-                                value: centro,
-                                child: Text(centro),
+                          items: medicalCenters
+                            ?.map(
+                              (medicalCenter) => DropdownMenuItem<int>(
+                                value: medicalCenter.id,
+                                child: Text(medicalCenter.name),
                               ),
                             )
                             .toList(),
@@ -322,9 +379,38 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
                               const Text("Regresar", style: TextStyle(fontSize: 18)),
                         ),
                         ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            _showSecondPopup(context);
+                          onPressed: () async {
+                            if (_selectedAlumno == null || _selectedCentro == null || _selectedDate == null || _selectedTime == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Por favor, complete todos los campos.'),
+                                  duration: Duration(seconds: 3),
+                                ),
+                              );
+                              return;
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Creando asistencia...'),
+                                  duration: Duration(seconds: 30),
+                                )
+                              );
+                              final Map<String, dynamic> response = await httpHelper.createAssitance(_selectedAlumno!, _selectedCentro!);
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).clearSnackBars();
+                                if (response['status'] == 'error') {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(response['error']),
+                                      duration: const Duration(seconds: 3),
+                                    )
+                                  );
+                                } else {
+                                  Navigator.pop(context);
+                                  _showSecondPopup(context);
+                                }
+                              }
+                            }
                           },
                           style: TextButton.styleFrom(
                             backgroundColor: const Color(0xFF448AFF),

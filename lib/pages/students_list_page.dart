@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_frontend/data/models/attendance.dart';
 import 'package:mobile_frontend/data/models/student.dart';
 import 'package:mobile_frontend/pages/data/http_helper.dart';
 
 class StudentsListPage extends StatefulWidget {
   const StudentsListPage({super.key, required this.onNavegate});
 
-  final void Function(int pageIndex) onNavegate;
+  final void Function(int pageIndex, Attendance attendance) onNavegate;
 
   @override
   State<StudentsListPage> createState() => _StudentsListPageState();
@@ -93,15 +94,22 @@ class _StudentsListPageState extends State<StudentsListPage> {
 class StudentItem extends StatefulWidget {
   const StudentItem({super.key, required this.student, required this.onNavegate});
   final Student student;
-  final void Function(int pageIndex) onNavegate;
+  final void Function(int pageIndex, Attendance attendance) onNavegate;
 
   @override
   State<StudentItem> createState() => _StudentItemState();
 }
 
 class _StudentItemState extends State<StudentItem> {
+  late HttpHelper httpHelper;
+
+  late Map<String, dynamic> attendanceResponse;
+
+  Attendance? attendance;
+
   @override
   void initState(){
+    httpHelper = HttpHelper();
     super.initState();
   }
 
@@ -143,9 +151,7 @@ class _StudentItemState extends State<StudentItem> {
                   borderRadius: BorderRadius.circular(15)
                 ),
               ),
-              onPressed: () {
-                _showFirstPopup(context);
-              },
+              onPressed: _getLastAttendance,
               child: const Text(
                 "ver datos",
                 textAlign: TextAlign.center,
@@ -156,6 +162,28 @@ class _StudentItemState extends State<StudentItem> {
         ],
       ),
     );
+  }
+
+  Future<void> _getLastAttendance() async {
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Obteniendo datos...'),
+        )
+    );
+    attendanceResponse = await httpHelper.getLastAttendanceByStudentId(widget.student.id);
+    if (attendanceResponse['status'] == 'error') {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(attendanceResponse['error']),
+          duration: const Duration(seconds: 3),
+        )
+      );
+    } else {
+      attendance = Attendance.fromJson(attendanceResponse['attendance']);
+      if (!mounted) return;
+      _showFirstPopup(context);
+    }
   }
 
   void _showFirstPopup(BuildContext context) {
@@ -196,7 +224,7 @@ class _StudentItemState extends State<StudentItem> {
   
                 SizedBox(height: 10),
   
-                Text("Centro Medico:", style: TextStyle(fontSize: 18)),
+                Text("Centro Medico: ${attendance?.medicalcenter.name}", style: TextStyle(fontSize: 18)),
   
                 SizedBox(height: 10),
   
@@ -226,7 +254,7 @@ class _StudentItemState extends State<StudentItem> {
                       onPressed: () {
                         Navigator.pop(context);
                         //mostrar pantalla nueva
-                        widget.onNavegate(5);
+                        widget.onNavegate(5, attendance!);
                       },
                       style: TextButton.styleFrom(
                         backgroundColor: const Color(0xFF448AFF),

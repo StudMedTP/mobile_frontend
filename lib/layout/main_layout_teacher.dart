@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_frontend/data/models/attendance.dart';
+import 'package:mobile_frontend/data/models/medicalCenter.dart';
+import 'package:mobile_frontend/data/models/student.dart';
+import 'package:mobile_frontend/data/models/user.dart';
 import 'package:mobile_frontend/pages/attendance_control_page.dart';
 import 'package:mobile_frontend/pages/notification_page.dart';
 import 'package:mobile_frontend/pages/profile_page.dart';
@@ -19,6 +23,8 @@ class _MainLayoutTeacherState extends State<MainLayoutTeacher> {
   int _bottomIndex = 1;   // navbar (1 = Home)
   int _pageIndex = 0;     // página real del stack
 
+  late Attendance attendance;
+
   // -----------------------------------------
   // PÁGINAS DE LA APP
   // -----------------------------------------
@@ -27,22 +33,23 @@ class _MainLayoutTeacherState extends State<MainLayoutTeacher> {
 
   @override
   void initState() {
+    attendance = Attendance(id: 0, studentId: 0, medicalCenterId: 0, student: Student(id: 0, studentCode: "", teacherId: 0, user: User(id: 0, firstName: "", lastName: "")), medicalcenter: MedicalCenter(id: 0, name: ""), status: '');
     super.initState();
     _pages = [
-      const HomePage(role: "Teacher"),                  // 0
-      const NotificationPage(role: "Teacher"),          // 1
-      const ProfilePage(role: "Teacher"),               // 2
-      StudentsListPage(onNavegate: _goToPage),          // 3
-      const AttendanceControlPage(),                    // 4
-      const StudentLocationPage(),                      // 5
+      const HomePage(role: "Teacher"),                    // 0
+      const NotificationPage(role: "Teacher"),            // 1
+      const ProfilePage(role: "Teacher"),                 // 2
+      StudentsListPage(onNavegate: _goToPage),            // 3
+      const AttendanceControlPage(),                      // 4
     ];
   }
 
   // Controlador para camnbiar pantallas desde un boton o a otra pagina 
   // desde una pagina del navbar y mantener el navbar y drawer funcionales
-  void _goToPage(int index) {
+  void _goToPage(int index, Attendance newAttendance) {
     setState(() {
       _pageIndex = index;
+      attendance = newAttendance;
       _bottomIndex = 1; // navbar se queda en HOME
     });
   }
@@ -66,7 +73,10 @@ class _MainLayoutTeacherState extends State<MainLayoutTeacher> {
       drawer: _buildSideBar(),
       body: IndexedStack(
         index: _pageIndex,
-        children: _pages,
+        children: [
+          ..._pages,
+          StudentLocationPage(attendance: attendance),
+        ],
       ),
       bottomNavigationBar: _buildNavbar(),
     );

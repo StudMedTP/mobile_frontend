@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:mobile_frontend/data/models/attendance.dart';
 
 class StudentLocationPage extends StatefulWidget {
-  const StudentLocationPage({super.key});
+  const StudentLocationPage({super.key, required this.attendance});
+  final Attendance attendance;
 
   @override
   State<StudentLocationPage> createState() => _StudentLocationPageState();
@@ -15,7 +17,7 @@ class _StudentLocationPageState extends State<StudentLocationPage> {
   @override
   Widget build(BuildContext context) {
     // Coordenadas 
-    final LatLng center = LatLng(-12.078749, -77.040358);
+    final LatLng center = LatLng(widget.attendance.latitude!, widget.attendance.longitude!);
 
     return Scaffold(
       body: SafeArea(

@@ -105,9 +105,11 @@ class HttpHelper {
     }
   }
 
-  Future<Map<String, dynamic>> getStudents() async {
+  Future <Map<String, dynamic>> getAllMyStudents() async {
+    final pref = await _prefs; 
     http.Response response = await http.get(
-        Uri.parse('$urlBase/microservice-user/users'),
+        Uri.parse('$urlBase/microservice-user/students/teacher/myObject'),
+        headers: {'Authorization': '${pref.getString('token')}'},
     );
     try {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
@@ -117,11 +119,40 @@ class HttpHelper {
     }
   }
 
-  Future <Map<String, dynamic>> getAllMyStudents() async {
-    final pref = await _prefs; 
+  Future <Map<String, dynamic>> getAllMedicalCenters() async {
     http.Response response = await http.get(
-        Uri.parse('$urlBase/microservice-user/students/teacher/myObject'),
-        headers: {'Authorization': '${pref.getString('token')}'},
+        Uri.parse('$urlBase/microservice-user/medical-centers')
+    );
+    try {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        return jsonResponse;
+    } catch (e) {
+        return { 'status': 'error', 'message': 'Error en la peticion' };
+    }
+  }
+
+  Future<Map<String, dynamic>> createAssitance(int studentId, int medicalCenterId) async {
+    http.Response response = await http.post(
+        Uri.parse('$urlBase/microservice-attendance/attendances'),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: json.encode({
+            "studentId": studentId,
+            "medicalCenterId": medicalCenterId
+        })
+    );
+    try {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        return jsonResponse;
+    } catch (e) {
+        return { 'status': 'error', 'message': 'Error en la peticion' };
+    }
+  }
+
+  Future <Map<String, dynamic>> getLastAttendanceByStudentId(int studentId) async {
+    http.Response response = await http.get(
+        Uri.parse('$urlBase/microservice-attendance/attendances/lastByStudentId/$studentId')
     );
     try {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);

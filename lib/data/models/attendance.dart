@@ -6,8 +6,10 @@ class Attendance{
   late int studentId;
   late int medicalCenterId;
   late Student student;
-  late Medicalcenter medicalcenter;
+  late MedicalCenter medicalcenter;
   late String status;
+  late double? latitude;
+  late double? longitude;
 
   Attendance({
     required this.id,
@@ -26,8 +28,14 @@ class Attendance{
       student = Student.fromJson(json['studentResource']);
     }
     if (json['medicalCenterResource'] != null) {
-      medicalcenter = Medicalcenter.fromJson(json['medicalCenterResource']);
+      medicalcenter = MedicalCenter.fromJson(json['medicalCenterResource']);
     }
     status = json['status'];
+    if (json['latitude'] != null) {
+      latitude = json['latitude'].toDouble();
+    }
+    if (json['longitude'] != null) {
+      longitude = json['longitude'].toDouble();
+    }
   }
 }

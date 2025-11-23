@@ -1,13 +1,13 @@
-class Medicalcenter{
+class MedicalCenter{
   late int id;
   late String name;
 
-  Medicalcenter({
+  MedicalCenter({
     required this.id,
     required this.name
   });
 
-  Medicalcenter.fromJson(Map<String, dynamic> json){
+  MedicalCenter.fromJson(Map<String, dynamic> json){
     id = json['id'];
     name = json['name'];
   }
