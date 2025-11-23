@@ -131,7 +131,7 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
                     children: [
                       Center(
                         child: const Text(
-                          "Practica de Cardiología",
+                          "Asignar Practica",
                           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -139,14 +139,14 @@ class _AttendanceControlPageState extends State<AttendanceControlPage> {
                       SizedBox(height: 10),
 
                       Text(
-                        "Nombre:", 
+                        "Alumno", 
                         style: TextStyle(fontSize: 18)
                       ),
 
                       SizedBox(height: 10),
                       
                       Text(
-                        "Apellido:", 
+                        "Centro Medico", 
                         style: TextStyle(fontSize: 18)
                       ),
 

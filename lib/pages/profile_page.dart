@@ -116,7 +116,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   onPressed: () async {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Abriendo clase...'),
+                        content: Text('Creando codigo...'),
                       )
                     );
                     final Map<String, dynamic> response = await httpHelper.openClass(teacher!.id);
@@ -140,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     backgroundColor: WidgetStateProperty.all<Color>(const Color(0xFF448AFF)),
                     foregroundColor: WidgetStateProperty.all<Color>(const Color.fromRGBO(10, 36, 63, 1))
                   ),
-                  child: const Text('Open class session page')
+                  child: const Text('Open code')
                 ),
                 
                 SizedBox(height: 25),
@@ -155,7 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   onPressed: () async {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Cerrando clase...'),
+                        content: Text('Cerrando codigo...'),
                       )
                     );
                     final Map<String, dynamic> response = await httpHelper.closeClass(teacher!.id);
@@ -179,7 +179,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     backgroundColor: WidgetStateProperty.all<Color>(const Color(0xFF448AFF)),
                     foregroundColor: WidgetStateProperty.all<Color>(const Color.fromRGBO(10, 36, 63, 1))
                   ),
-                  child: const Text('Close class session page')
+                  child: const Text('Close code ')
                 ),
 
                 SizedBox(height: 25),
