@@ -16,35 +16,36 @@ class _StudentsListPageState extends State<StudentsListPage> {
 
   late Map<String, dynamic> studentsResponse;  
 
-  List<Student>? classes;
+  List<Student>? students;
 
   bool loading = true;
   
-  //child: Text("HOME ${widget.role}"),
-  //Future initialize() async {
-  //    studentsResponse = await httpHelper.getAllMyStudents();
-  //        if (studentsResponse['status'] == 'error') {
-  //            if (!mounted) return;
-  //            setState(() {
-  //                loading = false;
-  //            });
-  //            ScaffoldMessenger.of(context).showSnackBar(
-  //                SnackBar(
-  //                    content: Text(studentsResponse['message']),
-  //                    duration: const Duration(seconds: 3)
-  //                )
-  //            );
-  //        } else {
-  //            final List classesMap = studentsResponse['classes'];
-  //            classes = classesMap.map((classJson) => classes.fromJson(classJson)).toList();
-  //            setState(() {
-  //                loading = false;
-  //            });
-  //    }
-  //}
+  Future initialize() async {
+    httpHelper = HttpHelper();
+    studentsResponse = await httpHelper.getAllMyStudents();
+    if (studentsResponse['status'] == 'error') {
+      if (!mounted) return;
+      setState(() {
+        loading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(studentsResponse['error']),
+          duration: const Duration(seconds: 3),
+        )
+      );
+    } else {
+      final List studentsMap = studentsResponse['students'];
+      students = studentsMap.map((classJson) => Student.fromJson(classJson)).toList();
+      setState(() {
+          loading = false;
+      });
+    }
+  }
 
   @override
   void initState(){
+    initialize();
     super.initState();
   }
 
@@ -57,7 +58,11 @@ class _StudentsListPageState extends State<StudentsListPage> {
             padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+              children: loading ? [
+                Center(
+                  child: const CircularProgressIndicator(),
+                ),
+              ] : [
                 Align(
                   alignment: Alignment.center,
                   child: const Text(
@@ -68,59 +73,87 @@ class _StudentsListPageState extends State<StudentsListPage> {
 
                 const SizedBox(height: 25),
 
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.lightBlue[200],
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Nombre: ",
-                        style: TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold
-                        )
-                      ),
-
-                      SizedBox(height: 10),
-
-                      Text(
-                        "Apellido:", 
-                        style: TextStyle(fontSize: 18)
-                      ),
-
-                      SizedBox(height: 10),
-                      
-                      Align(
-                        alignment: Alignment.centerRight ,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:Colors.blueAccent,
-                            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)
-                            ),
-                          ),
-                          onPressed: () {
-                            _showFirstPopup(context);
-                          },
-                          child: const Text(
-                            "ver datos",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 18, color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: students?.length,
+                  itemBuilder: (context, index) {
+                      return StudentItem(student: students![index], onNavegate: widget.onNavegate);
+                  }
                 ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class StudentItem extends StatefulWidget {
+  const StudentItem({super.key, required this.student, required this.onNavegate});
+  final Student student;
+  final void Function(int pageIndex) onNavegate;
+
+  @override
+  State<StudentItem> createState() => _StudentItemState();
+}
+
+class _StudentItemState extends State<StudentItem> {
+  @override
+  void initState(){
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.lightBlue[200],
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Nombre: ${widget.student.user.firstName}",
+            style: TextStyle(
+              fontSize: 20, fontWeight: FontWeight.bold
+            )
+          ),
+
+          SizedBox(height: 10),
+
+          Text(
+            "Apellido: ${widget.student.user.lastName}", 
+            style: TextStyle(fontSize: 18)
+          ),
+
+          SizedBox(height: 10),
+          
+          Align(
+            alignment: Alignment.centerRight ,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor:Colors.blueAccent,
+                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)
+                ),
+              ),
+              onPressed: () {
+                _showFirstPopup(context);
+              },
+              child: const Text(
+                "ver datos",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -155,11 +188,11 @@ class _StudentsListPageState extends State<StudentsListPage> {
                 ),
                 const SizedBox(height: 20),
   
-                Text("Nombre: ", style: TextStyle(fontSize: 18)),
+                Text("Nombre: ${widget.student.user.firstName}", style: TextStyle(fontSize: 18)),
   
                 SizedBox(height: 10),
   
-                Text("Apellido:", style: TextStyle(fontSize: 18)),
+                Text("Apellido: ${widget.student.user.lastName}", style: TextStyle(fontSize: 18)),
   
                 SizedBox(height: 10),
   

@@ -44,7 +44,6 @@ class _AttendanceUserPageState extends State<AttendanceUserPage> {
 
   @override
   void initState(){
-    httpHelper = HttpHelper();
     initialize();
     super.initState();
   }
