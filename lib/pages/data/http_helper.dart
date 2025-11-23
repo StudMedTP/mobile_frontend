@@ -49,6 +49,62 @@ class HttpHelper {
       }
   }
 
+  Future <Map<String, dynamic>> getAllMyAttendances() async {
+    final pref = await _prefs; 
+    http.Response response = await http.get(
+        Uri.parse('$urlBase/microservice-attendance/attendances/myObject'),
+        headers: {'Authorization': '${pref.getString('token')}'},
+    );
+    try {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        return jsonResponse;
+    } catch (e) {
+        return { 'status': 'error', 'message': 'Error en la peticion' };
+    }
+  }
+
+  Future <Map<String, dynamic>> verifyTeacherDailyCode(int teacherId, String dailyCode) async {
+    http.Response response = await http.get(
+        Uri.parse('$urlBase/microservice-user/teachers/verifyDailyCode/$teacherId/$dailyCode')
+    );
+    try {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        return jsonResponse;
+    } catch (e) {
+        return { 'status': 'error', 'message': 'Error en la peticion' };
+    }
+  }
+
+  Future<Map<String, dynamic>> updateAttendance(int id) async {
+    http.Response response = await http.put(
+        Uri.parse('$urlBase/microservice-attendance/attendances/$id'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          "status": "FIRMADO"
+        })
+    );
+    try {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        return jsonResponse;
+    } catch (e) {
+        return { 'status': 'error', 'message': 'Error en la peticion' };
+    }
+  }
+
+  Future <Map<String, dynamic>> recordAttendance(int teacherId, int studentId, double latitud, double longitud) async {
+    http.Response response = await http.post(
+        Uri.parse('$urlBase/microservice-attendance/blockchains/$teacherId/$studentId/$latitud/$longitud')
+    );
+    try {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        return jsonResponse;
+    } catch (e) {
+        return { 'status': 'error', 'message': 'Error en la peticion' };
+    }
+  }
+
   Future<Map<String, dynamic>> getStudents() async {
     http.Response response = await http.get(
         Uri.parse('$urlBase/microservice-user/users'),

@@ -74,7 +74,8 @@ class _LocationPageState extends State<LocationPage> {
             child: FlutterMap(
               mapController: _mapController,
               options: MapOptions(
-                initialCenter: center
+                initialCenter: center,
+                initialZoom: 16,
               ),
               children: [
                 TileLayer(
