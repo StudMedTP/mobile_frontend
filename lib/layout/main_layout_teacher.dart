@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_frontend/pages/attendance_control_page.dart';
 import 'package:mobile_frontend/pages/notification_page.dart';
 import 'package:mobile_frontend/pages/profile_page.dart';
+import 'package:mobile_frontend/pages/student_location_page.dart';
+import 'package:mobile_frontend/pages/students_list_page.dart';
 import '../pages/home_page.dart';
 
 class MainLayoutTeacher extends StatefulWidget {
@@ -19,11 +22,43 @@ class _MainLayoutTeacherState extends State<MainLayoutTeacher> {
   // -----------------------------------------
   // PÁGINAS DE LA APP
   // -----------------------------------------
-  final List<Widget> _pages = const [
-    HomePage(role: "Teacher"),           // 0
-    NotificationPage(role: "Teacher"),   // 2
-    ProfilePage(role: "Teacher"),        // 3
-  ];
+
+  late final List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      const HomePage(role: "Teacher"),                // 0
+      const NotificationPage(role: "Teacher"),        // 1
+      const ProfilePage(role: "Teacher"),             // 2
+      StudentsListPage(onNavegate: _goToPage),       // 3
+      const AttendanceControlPage(role:   "Teacher"), // 4
+      const StudentLocationPage(),   // 5
+      
+    ];
+  }
+
+  void _goToPage(int index) {
+    setState(() {
+      _pageIndex = index;
+      _bottomIndex = 1; // navbar se queda en HOME
+    });
+  }
+
+
+
+  //---------------Lista oritinal de paginas----------------
+  //
+  //final List<Widget> _pages = [
+  //  const HomePage(role: "Teacher"),                // 0
+  //  const NotificationPage(role: "Teacher"),        // 1
+  //  const ProfilePage(role: "Teacher"),             // 2
+  //  StudentsListPage(),       // 3
+  //  const AttendanceControlPage(role:   "Teacher"), // 4
+  //  const StudentLocationPage(),   // 5
+  //  
+  //];
 
   @override
   Widget build(BuildContext context) {
@@ -89,10 +124,41 @@ class _MainLayoutTeacherState extends State<MainLayoutTeacher> {
                 color: Colors.white,
               ),
               textAlign: TextAlign.center,
-            )
+            ),
+
+            const SizedBox(height: 40),
+
+            _drawerItem(Icons.checklist, "Lista de Estudiantes", () {
+              Navigator.pop(context);
+              setState(() {
+                _pageIndex = 3;   // Ir a AttendanceUserPage()
+                _bottomIndex = 1; // Mantener navbar en HOME
+              });
+            }),
+
+            const SizedBox(height: 20),
+
+            _drawerItem(Icons.assignment, "Control de Asistencia", () {
+              Navigator.pop(context);
+              setState(() {
+                _pageIndex = 4;   // Ir a PracticePage()
+                _bottomIndex = 1; // navbar se queda en HOME
+              });
+            }),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _drawerItem(IconData icon, String title, VoidCallback onTap) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.black),
+      title: Text(
+        title,
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+      ),
+      onTap: onTap,
     );
   }
 }

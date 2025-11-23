@@ -13,47 +13,61 @@ class _PracticePageState extends State<PracticePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(20), // padding similar a AttendanceUserPage
-            child: Center( // centra todo horizontalmente
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 40),
-
-                  const Text(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Center(
+                  child: const Text(
                     "Prácticas Clínicas",
                     style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   ),
+                ),
 
-                  const SizedBox(height: 40),
 
-                  // Caja principal
-                  Container(
-                    width: 320,
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.lightBlue[300],
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Column(
-                      children: [
-                        const Text(
+                const SizedBox(height: 25),
+
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.lightBlue[200],
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+
+
+
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+
+
+                      Center(
+                        child: const Text(
                           "Práctica de Cardiología",
                           style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+
+                            fontSize: 20, fontWeight: FontWeight.bold),
                         ),
+                      ),
 
-                        const SizedBox(height: 15),
 
-                        ElevatedButton(
+                      const SizedBox(height: 15),
+
+
+                      Align(
+                        alignment: Alignment.center,
+                        child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor:Colors.blueAccent,
+                            padding:
+                              const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)),
+                                borderRadius: BorderRadius.circular(15)),
                           ),
                           onPressed: () {
                             _showUploadPopup();
@@ -63,15 +77,17 @@ class _PracticePageState extends State<PracticePage> {
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: 18, color: Colors.white),),
                         ),
-                      ],
-                    ),
+                      ),
+
+
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
-      ),
+      ),   
     );
   }
 

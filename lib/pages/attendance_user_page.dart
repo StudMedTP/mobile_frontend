@@ -8,6 +8,10 @@ class AttendanceUserPage extends StatefulWidget {
 }
 
 class _AttendanceUserPageState extends State<AttendanceUserPage> {
+
+  final TextEditingController _codigoController = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,6 +29,7 @@ class _AttendanceUserPageState extends State<AttendanceUserPage> {
                 const SizedBox(height: 25),
 
                 // Caja azul con información
+                
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
@@ -90,18 +95,68 @@ class _AttendanceUserPageState extends State<AttendanceUserPage> {
               "Firmar Asistencia",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
+
             const SizedBox(height: 15),
+            
             const Text(
               "Se registrará tu asistencia con los siguientes datos:\n\n"
               "Tu Ubicación: Av. Edgardo Rebagliati 490, Jesús María 15072\n"
               "Fecha: 20/11/2025\n"
-              "Hora: 7:58 am\n\n"
-              "Si no se encuentra en la ubicación de su práctica, "
-              "por favor intente más tarde cuando se encuentre en su ubicación para evitar una asistencia errónea.",
+              "Hora: 7:58 am",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16),
             ),
+
+            const SizedBox(height: 10),
+
+
+
+            // ---------------- Ingresar Codigo Diario ----------------
+
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                "Código:",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+  
+            const SizedBox(height: 5),
+  
+            TextField(
+              controller: _codigoController,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                hintText: "Ingrese código para firmar su asistencia",
+                
+                hintStyle: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,                  
+                ),      
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 15,
+                ),
+              ),
+            ),
+
             const SizedBox(height: 20),
+
+
+              const Text(
+                "Si no se encuentra en la ubicación de su práctica, "
+                "por favor intente más tarde cuando se encuentre en su ubicación para evitar una asistencia errónea.",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ),
+
+            // ---------------- Botones ----------------
+
+            const SizedBox(height: 20),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

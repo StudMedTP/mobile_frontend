@@ -97,6 +97,7 @@ class _MainLayoutState extends State<MainLayout> {
               ),
               textAlign: TextAlign.center,
             ),
+            
             const SizedBox(height: 40),
 
             _drawerItem(Icons.checklist, "Control de Asistencia", () {
