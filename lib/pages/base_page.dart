@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.role});
-  final String role;
+class BasePage extends StatefulWidget {
+  const BasePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<BasePage> createState() => _BasePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _BasePageState extends State<BasePage> {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -22,21 +20,19 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Align(
                   alignment: Alignment.center,
-                  child: Text(
-                    "Home ${widget.role}",
-                    style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  child: const Text(
+                    "Base Page",
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   ),
                 ),
-
+                                
                 const SizedBox(height: 25),
-              
+
               ],
             ),
           ),
         ),
       ),
     );
-
-
   }
 }

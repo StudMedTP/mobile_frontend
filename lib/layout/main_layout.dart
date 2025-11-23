@@ -19,17 +19,46 @@ class _MainLayoutState extends State<MainLayout> {
   int _bottomIndex = 1;   // navbar (1 = Home)
   int _pageIndex = 0;     // página real del stack
 
+  late final List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      const HomePage(role: "Student"),            // 0
+      const LocationPage(),                             // 1
+      const NotificationPage(role: "Student"),    // 2
+      const ProfilePage(role: "Student"),         // 3
+      const AttendanceUserPage(),                 // 4
+      const PracticePage()                        // 5
+    ];
+  }
+
+  //ejemplo en teacher
+  //      StudentsListPage(onNavegate: _goToPage),          // 3 
+  //
+  //Controlador para camnbiar pantallas desde un boton o a otra pagina 
+  // desde una pagina del navbar y mantener el navbar y drawer funcionales
+  void _goToPage(int index) {
+    setState(() {
+      _pageIndex = index;
+      _bottomIndex = 1; // navbar se queda en HOME
+    });
+  }
+
+  //---------------Lista original de paginas----------------
+  //
   // -----------------------------------------
-  // PÁGINAS DE LA APP
+  //            PÁGINAS DE LA APP
   // -----------------------------------------
-  final List<Widget> _pages = const [
-    HomePage(role: "Student"),           // 0
-    LocationPage(),       // 1
-    NotificationPage(role: "Student"),   // 2
-    ProfilePage(role: "Student"),        // 3
-    AttendanceUserPage(), // 4
-    PracticePage()        // 5
-  ];
+  //final List<Widget> _pages = const [
+  //  HomePage(role: "Student"),            // 0
+  //  LocationPage(),                       // 1
+  //  NotificationPage(role: "Student"),    // 2
+  //  ProfilePage(role: "Student"),         // 3
+  //  AttendanceUserPage(),                 // 4
+  //  PracticePage()                        // 5
+  //];
 
   @override
   Widget build(BuildContext context) {
@@ -134,5 +163,3 @@ class _MainLayoutState extends State<MainLayout> {
     );
   }
 }
-
-

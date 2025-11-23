@@ -43,7 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 await _prefs.remove('role');
               },
               style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all<Color>(const Color.fromRGBO(30, 161, 210, 1)),
+                backgroundColor: WidgetStateProperty.all<Color>(const Color(0xFF448AFF)),
                 foregroundColor: WidgetStateProperty.all<Color>(const Color.fromRGBO(10, 36, 63, 1))
               ),
               child: const Text('Cerrar Sesión')

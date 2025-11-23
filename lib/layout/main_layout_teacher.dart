@@ -29,16 +29,19 @@ class _MainLayoutTeacherState extends State<MainLayoutTeacher> {
   void initState() {
     super.initState();
     _pages = [
-      const HomePage(role: "Teacher"),                // 0
-      const NotificationPage(role: "Teacher"),        // 1
-      const ProfilePage(role: "Teacher"),             // 2
-      StudentsListPage(onNavegate: _goToPage),       // 3
-      const AttendanceControlPage(role:   "Teacher"), // 4
-      const StudentLocationPage(),   // 5
+      const HomePage(role: "Teacher"),                  // 0
+      const NotificationPage(role: "Teacher"),          // 1
+      const ProfilePage(role: "Teacher"),               // 2
+      StudentsListPage(onNavegate: _goToPage),          // 3
+      const AttendanceControlPage(role:   "Teacher"),   // 4
+      const StudentLocationPage(),                      // 5
       
     ];
   }
 
+
+  // Controlador para camnbiar pantallas desde un boton o a otra pagina 
+  // desde una pagina del navbar y mantener el navbar y drawer funcionales
   void _goToPage(int index) {
     setState(() {
       _pageIndex = index;
@@ -48,7 +51,7 @@ class _MainLayoutTeacherState extends State<MainLayoutTeacher> {
 
 
 
-  //---------------Lista oritinal de paginas----------------
+  //---------------Lista original de paginas----------------
   //
   //final List<Widget> _pages = [
   //  const HomePage(role: "Teacher"),                // 0
@@ -162,5 +165,3 @@ class _MainLayoutTeacherState extends State<MainLayoutTeacher> {
     );
   }
 }
-
-

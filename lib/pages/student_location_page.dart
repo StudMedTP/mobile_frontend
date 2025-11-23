@@ -14,7 +14,7 @@ class _StudentLocationPageState extends State<StudentLocationPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Coordenadas fijas
+    // Coordenadas 
     final LatLng center = LatLng(-12.078749, -77.040358);
 
     return Scaffold(
@@ -32,7 +32,7 @@ class _StudentLocationPageState extends State<StudentLocationPage> {
 
             const SizedBox(height: 25),
 
-            // --------- TEXTO SUPERIOR ----------
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
@@ -61,7 +61,7 @@ class _StudentLocationPageState extends State<StudentLocationPage> {
 
             const SizedBox(height: 15),
 
-            // --------- MAPA (OCUPA EL RESTO DE LA PANTALLA) ----------
+            // --------- MAPA ----------
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(20),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_frontend/data/models/student.dart';
 import 'package:mobile_frontend/pages/data/http_helper.dart';
-import 'package:mobile_frontend/pages/student_location_page.dart';
 
 class StudentsListPage extends StatefulWidget {
   const StudentsListPage({super.key, required this.onNavegate});
@@ -23,6 +22,7 @@ class _StudentsListPageState extends State<StudentsListPage> {
   
   bool loading = true;
   
+  //child: Text("HOME ${widget.role}"),
   //Future initialize() async {
   //    studentsResponse = await httpHelper.getAllMyStudents();
   //        if (studentsResponse['status'] == 'error') {
@@ -128,78 +128,99 @@ class _StudentsListPageState extends State<StudentsListPage> {
     );
   }
 
-
   void _showFirstPopup(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        contentPadding: const EdgeInsets.all(20),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      builder: (context) {
 
-            Center(
-              child: const Text(
-                "Alumno",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
+        final double screenWidth = MediaQuery.of(context).size.width;
 
-            ),
-            const SizedBox(height: 20),
+        return AlertDialog(
 
-            Text("Nombre: ", style: TextStyle(fontSize: 18)),
+          backgroundColor: Colors.lightBlue[200],
 
-            SizedBox(height: 10),
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 15,
+            vertical: 24,
+          ),
 
-            Text("Apellido:", style: TextStyle(fontSize: 18)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20)),
+          contentPadding: const EdgeInsets.all(20),
 
-            SizedBox(height: 10),
-
-            Text("Centro Medico:", style: TextStyle(fontSize: 18)),
-
-            SizedBox(height: 10),
-
-            Text("Hora:", style: TextStyle(fontSize: 18)),
-
-            SizedBox(height: 10),
-
-            Text("Estado:", style: TextStyle(fontSize: 18)),
-
-            SizedBox(height: 10),
-
-            // ---------------- Botones ----------------
-
-            const SizedBox(height: 20),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          content: SizedBox(
+            width: screenWidth * 0.9,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child:
-                      const Text("Regresar", style: TextStyle(fontSize: 18)),
+              
+                Center(
+                  child: const Text(
+                    "Alumno",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+  
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    //mostrar pantalla nueva
-                    widget.onNavegate(5);
-
-                  },
-                  child: const Text("Siguiente", style: TextStyle(fontSize: 18)),
+                const SizedBox(height: 20),
+  
+                Text("Nombre: ", style: TextStyle(fontSize: 18)),
+  
+                SizedBox(height: 10),
+  
+                Text("Apellido:", style: TextStyle(fontSize: 18)),
+  
+                SizedBox(height: 10),
+  
+                Text("Centro Medico:", style: TextStyle(fontSize: 18)),
+  
+                SizedBox(height: 10),
+  
+                Text("Hora:", style: TextStyle(fontSize: 18)),
+  
+                SizedBox(height: 10),
+  
+                Text("Estado:", style: TextStyle(fontSize: 18)),
+  
+                SizedBox(height: 10),
+  
+                // ---------------- Botones ----------------
+                const SizedBox(height: 20),
+  
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                      ),
+                
+                      child:
+                          const Text("Regresar", style: TextStyle(fontSize: 18)),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        //mostrar pantalla nueva
+                        widget.onNavegate(5);
+  
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: const Color(0xFF448AFF),
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text("Siguiente", style: TextStyle(fontSize: 18)),
+                    ),
+                  ],
                 ),
               ],
-            ),
-          ],
-        ),
-      ),
+            ),    
+          ),
+        );
+      },
     );
   }
-
-
-
-
-
 }

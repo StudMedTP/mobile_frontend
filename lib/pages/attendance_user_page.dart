@@ -107,7 +107,7 @@ class _AttendanceUserPageState extends State<AttendanceUserPage> {
               style: TextStyle(fontSize: 16),
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
 
 
 
