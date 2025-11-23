@@ -177,8 +177,8 @@ class _AttendanceItemState extends State<AttendanceItem> {
                 )
               ),
               const SizedBox(height: 10),
-              const Text("Fecha: 20/11/2025", style: TextStyle(fontSize: 18)),
-              const Text("Hora: 08:00 am", style: TextStyle(fontSize: 18)),
+              Text("Fecha: ${widget.attendance.date.day}/${widget.attendance.date.month}/${widget.attendance.date.year}", style: TextStyle(fontSize: 18)),
+              Text("Hora: ${TimeOfDay.fromDateTime(widget.attendance.date).format(context)}", style: const TextStyle(fontSize: 18)),
               const SizedBox(height: 10),
               Text(
                 "Estado: ${widget.attendance.status == 'PENDIENTE' ? 'Pendiente de atención' : widget.attendance.status == 'FIRMADO' ? 'Firmado' : 'No asistió'}",

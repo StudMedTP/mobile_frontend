@@ -8,6 +8,7 @@ class Attendance{
   late Student student;
   late MedicalCenter medicalcenter;
   late String status;
+  late DateTime date;
   late double? latitude;
   late double? longitude;
 
@@ -17,7 +18,8 @@ class Attendance{
     required this.medicalCenterId,
     required this.student,
     required this.medicalcenter,
-    required this.status
+    required this.status,
+    required this.date
   });
 
   Attendance.fromJson(Map<String, dynamic> json){
@@ -31,6 +33,7 @@ class Attendance{
       medicalcenter = MedicalCenter.fromJson(json['medicalCenterResource']);
     }
     status = json['status'];
+    date = DateTime.parse(json['date']);
     if (json['latitude'] != null) {
       latitude = json['latitude'].toDouble();
     }
