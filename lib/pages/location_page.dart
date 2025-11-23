@@ -75,7 +75,7 @@ class _LocationPageState extends State<LocationPage> {
               mapController: _mapController,
               options: MapOptions(
                 initialCenter: center,
-                initialZoom: 16,
+                //initialZoom: 16,
               ),
               children: [
                 TileLayer(

@@ -124,7 +124,8 @@ class _StudentItemState extends State<StudentItem> {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        
+        children: [          
           Text(
             "Nombre: ${widget.student.user.firstName}",
             style: TextStyle(
@@ -159,7 +160,9 @@ class _StudentItemState extends State<StudentItem> {
               ),
             ),
           ),
+          //const SizedBox(height: 25),
         ],
+        
       ),
     );
   }
@@ -170,7 +173,11 @@ class _StudentItemState extends State<StudentItem> {
             content: Text('Obteniendo datos...'),
         )
     );
+    
     attendanceResponse = await httpHelper.getLastAttendanceByStudentId(widget.student.id);
+
+    print(attendanceResponse);
+
     if (attendanceResponse['status'] == 'error') {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -180,7 +187,7 @@ class _StudentItemState extends State<StudentItem> {
         )
       );
     } else {
-      attendance = Attendance.fromJson(attendanceResponse['attendance']);
+     attendance = Attendance.fromJson(attendanceResponse['attendance']);
       if (!mounted) return;
       _showFirstPopup(context);
     }

@@ -17,7 +17,7 @@ class _MainLayoutState extends State<MainLayout> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   int _bottomIndex = 1;   // navbar (1 = Home)
-  int _pageIndex = 0;     // página real del stack
+  int _pageIndex = 3;     // página real del stack
 
   late final List<Widget> _pages;
 
