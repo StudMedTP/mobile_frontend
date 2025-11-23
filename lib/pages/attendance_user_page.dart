@@ -367,7 +367,7 @@ class _AttendanceItemState extends State<AttendanceItem> {
                                 )
                               );
                             } else {
-                              final Map<String, dynamic> response = await httpHelper.recordAttendance(widget.attendance.student.teacherId, widget.attendance.studentId, _latitude!, _longitude!);
+                              final Map<String, dynamic> response = await httpHelper.recordAttendance(widget.attendance.id, widget.attendance.student.teacherId, widget.attendance.studentId, _latitude!, _longitude!);
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).clearSnackBars();
                                 if (response['status'] == 'error') {

@@ -93,9 +93,9 @@ class HttpHelper {
     }
   }
 
-  Future <Map<String, dynamic>> recordAttendance(int teacherId, int studentId, double latitud, double longitud) async {
+  Future <Map<String, dynamic>> recordAttendance(int attendanceId, int teacherId, int studentId, double latitud, double longitud) async {
     http.Response response = await http.post(
-        Uri.parse('$urlBase/microservice-attendance/blockchains/$teacherId/$studentId/$latitud/$longitud')
+        Uri.parse('$urlBase/microservice-attendance/blockchains/$attendanceId/$teacherId/$studentId/$latitud/$longitud')
     );
     try {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
