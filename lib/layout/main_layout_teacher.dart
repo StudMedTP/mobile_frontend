@@ -33,7 +33,7 @@ class _MainLayoutTeacherState extends State<MainLayoutTeacher> {
 
   @override
   void initState() {
-    attendance = Attendance(id: 0, studentId: 0, medicalCenterId: 0, student: Student(id: 0, studentCode: "", teacherId: 0, user: User(id: 0, firstName: "", lastName: "")), medicalcenter: MedicalCenter(id: 0, name: ""), status: '', date: DateTime.now(), latitude: 0.0, longitude: 0.0);
+    attendance = Attendance(id: 0, studentId: 0, medicalCenterId: 0, student: Student(id: 0, studentCode: "", teacherId: 0, user: User(id: 0, firstName: "", lastName: "", email: "", role: "")), medicalcenter: MedicalCenter(id: 0, name: ""), status: '', date: DateTime.now(), latitude: 0.0, longitude: 0.0);
     super.initState();
     _pages = [
       const HomePage(role: "Teacher"),                    // 0

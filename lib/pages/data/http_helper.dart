@@ -162,4 +162,26 @@ class HttpHelper {
         return { 'status': 'error', 'message': 'Error en la peticion' };
     }
   }
+
+  Future <Map<String, dynamic>> getUser() async {
+    final pref = await _prefs;
+
+    Map<String, String> requestHeaders = {
+      'Content-type': 'application/json',
+      'Authorization': '${pref.getString('token')}'
+    };
+
+    http.Response response = await http.get(
+      Uri.parse('$urlBase/microservice-user/users/myObject'), 
+      headers: requestHeaders
+    );
+
+    try {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse;
+    } catch (e) {
+      return { 'status': 'error', 'message': 'Error en la peticion' };
+    }
+
+  }
 }
