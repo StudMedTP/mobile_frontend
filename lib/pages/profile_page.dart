@@ -77,7 +77,11 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+              children: loading ? [
+                Center(
+                  child: const CircularProgressIndicator(),
+                ),
+              ] : [
                 Align(
                   alignment: Alignment.center,
                   child: Text(
