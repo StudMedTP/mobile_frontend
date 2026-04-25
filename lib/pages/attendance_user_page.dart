@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:geocode/geocode.dart';
 import 'package:mobile_frontend/data/models/attendance.dart';
 import 'package:mobile_frontend/pages/data/http_helper.dart';
 
@@ -148,6 +149,8 @@ class _AttendanceItemState extends State<AttendanceItem> {
 
   double? _latitude;
   double? _longitude;
+  late DateTime _attendanceDateTime;
+  String _addressString = "Cargando ubicación...";
 
   @override
   void initState(){
@@ -242,12 +245,34 @@ class _AttendanceItemState extends State<AttendanceItem> {
       setState(() {
         _latitude = pos.latitude;
         _longitude = pos.longitude;
+        _attendanceDateTime = DateTime.now();
       });
+      
+      // Obtener la dirección desde las coordenadas
+      await _getAddressFromCoordinates(pos.latitude, pos.longitude);
+      
       if (!mounted) return;
       _showFirstPopup(context);
     } catch (e) {
       if (!mounted) return;
       _showLocationErrorPopup(context);
+    }
+  }
+
+  // Función para obtener la dirección desde latitud y longitud
+  Future<void> _getAddressFromCoordinates(double latitude, double longitude) async {
+    try {
+      final currentAddress = await GeoCode(apiKey: "955629831226981577056x78046").reverseGeocoding(
+        latitude: latitude,
+        longitude: longitude);
+      
+      setState(() {
+        _addressString = "${currentAddress.streetAddress}, ${currentAddress.city}, ${currentAddress.countryName}, ${currentAddress.postal}";
+      });
+    } catch (e) {
+      setState(() {
+        _addressString = "$latitude, aaaaaaaaaaaaaaaaa $longitude";
+      });
     }
   }
 
@@ -268,13 +293,13 @@ class _AttendanceItemState extends State<AttendanceItem> {
 
             const SizedBox(height: 15),
             
-            const Text(
+            Text(
               "Se registrará tu asistencia con los siguientes datos:\n\n"
-              "Tu Ubicación: Av. Edgardo Rebagliati 490, Jesús María 15072\n"
-              "Fecha: 20/11/2025\n"
-              "Hora: 7:58 am",
+              "Tu Ubicación: $_addressString\n"
+              "Fecha: ${_attendanceDateTime.day}/${_attendanceDateTime.month}/${_attendanceDateTime.year}\n"
+              "Hora: ${TimeOfDay.fromDateTime(_attendanceDateTime).format(context)}",
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
 
             const SizedBox(height: 20),
