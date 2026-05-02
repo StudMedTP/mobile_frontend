@@ -112,7 +112,7 @@ class _ProfilePageState extends State<ProfilePage> {
       }
 
       setState(() {
-        _teacher?.dailyCode = response['dailyCode'];
+        _teacher = Teacher.fromJson(response);
       });
 
       _showSuccessSnackBar('¡Clase abierta!');
@@ -140,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
       }
 
       setState(() {
-        _teacher?.dailyCode = response['dailyCode'];
+        _teacher = Teacher.fromJson(response);
       });
 
       _showSuccessSnackBar('¡Clase cerrada!');
@@ -407,11 +407,7 @@ class _ProfilePageState extends State<ProfilePage> {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [primaryColor, accentColor],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: primaryColor, width: 1.5),
       ),

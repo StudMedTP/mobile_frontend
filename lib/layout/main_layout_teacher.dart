@@ -19,7 +19,8 @@ class _MainLayoutTeacherState extends State<MainLayoutTeacher> {
   void initState() {
     super.initState();
     _pages = [
-      const ProfilePage(role: "Teacher"),                 // 0
+      const ProfilePage(role: "Teacher"),
+      const ProfilePage(role: "Teacher"),
     ];
   }
 
@@ -48,10 +49,11 @@ class _MainLayoutTeacherState extends State<MainLayoutTeacher> {
       showUnselectedLabels: false,
       onTap: (index) {
         setState(() {
-          _pageIndex = index - 1;
+          _pageIndex = index;
         });
       },
       items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Profile"),
         BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Profile"),
       ],
     );
