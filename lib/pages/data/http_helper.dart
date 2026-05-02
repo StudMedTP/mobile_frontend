@@ -270,7 +270,36 @@ class HttpHelper {
     }
   }
 
-  Future<Map<String, dynamic>> getClassroomStudents(int classroomId) async {
+  Future<Map<String, dynamic>> getClassroomStudents() async {
+    final pref = await _prefs;
+    final token = pref.getString('token');
+    
+    if (token == null || token.isEmpty) {
+      return {'status': 'error', 'message': 'Token no disponible'};
+    }
+
+    try {
+      http.Response response = await http.get(
+        Uri.parse('$urlBase/microservice-evaluation/classroom-students/myObject'),
+        headers: {'Authorization': token},
+      );
+
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonResponse;
+      } else {
+        return {
+          'status': 'error',
+          'message': jsonResponse['message'] ?? 'Error al obtener estudiantes del aula'
+        };
+      }
+    } catch (e) {
+      return {'status': 'error', 'message': 'Error en la petición: ${e.toString()}'};
+    }
+  }
+
+  Future<Map<String, dynamic>> getClassroomStudentsByClassroomId(int classroomId) async {
     try {
       http.Response response = await http.get(
         Uri.parse('$urlBase/microservice-evaluation/classroom-students/classroom/$classroomId'),

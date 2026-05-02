@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_frontend/data/models/classroom.dart';
 import 'package:mobile_frontend/data/models/classroom_student.dart';
 import 'package:mobile_frontend/pages/data/http_helper.dart';
 
-class ClassroomStudentsPage extends StatefulWidget {
-  final Classroom classroom;
-
-  const ClassroomStudentsPage({
-    super.key,
-    required this.classroom,
-  });
+class ClassroomStudentsStudentPage extends StatefulWidget {
+  const ClassroomStudentsStudentPage({super.key});
 
   @override
-  State<ClassroomStudentsPage> createState() => _ClassroomStudentsPageState();
+  State<ClassroomStudentsStudentPage> createState() => _ClassroomStudentsStudentPageState();
 }
 
-class _ClassroomStudentsPageState extends State<ClassroomStudentsPage> {
+class _ClassroomStudentsStudentPageState extends State<ClassroomStudentsStudentPage> {
   late HttpHelper _httpHelper;
   bool _isLoading = true;
   List<ClassroomStudent> _classroomStudents = [];
@@ -33,7 +27,7 @@ class _ClassroomStudentsPageState extends State<ClassroomStudentsPage> {
 
     _httpHelper = HttpHelper();
 
-    final response = await _httpHelper.getClassroomStudentsByClassroomId(widget.classroom.id);
+    final response = await _httpHelper.getClassroomStudents();
 
     if (!mounted) return;
 
@@ -55,6 +49,19 @@ class _ClassroomStudentsPageState extends State<ClassroomStudentsPage> {
       _classroomStudents = [];
     }
 
+    final userResponse = await _httpHelper.getUser();
+
+    if (!mounted) return;
+
+    if (userResponse['status'] == 'error') {
+      _showErrorSnackBar(userResponse['message'] ?? 'Error al cargar perfil');
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
+
+
     setState(() {
       _isLoading = false;
     });
@@ -73,11 +80,6 @@ class _ClassroomStudentsPageState extends State<ClassroomStudentsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Estudiantes - ${widget.classroom.name}'),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-      ),
       body: SafeArea(
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
@@ -90,7 +92,7 @@ class _ClassroomStudentsPageState extends State<ClassroomStudentsPage> {
                     Expanded(
                       child: _classroomStudents.isEmpty
                           ? _buildEmptyState()
-                          : _buildStudentsList(),
+                          : _buildClassroomStudentsList(),
                     ),
                   ],
                 ),
@@ -103,9 +105,9 @@ class _ClassroomStudentsPageState extends State<ClassroomStudentsPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          'Estudiantes (${_classroomStudents.length})',
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        const Text(
+          'Aulas',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -116,45 +118,49 @@ class _ClassroomStudentsPageState extends State<ClassroomStudentsPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.person, size: 80, color: Colors.grey[400]),
+          Icon(Icons.room, size: 80, color: Colors.grey[400]),
           const SizedBox(height: 16),
           Text(
-            'No hay estudiantes en esta aula',
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.grey[600],
-              fontWeight: FontWeight.w500,
-            ),
+            'No hay aulas disponibles',
+            style: TextStyle(fontSize: 18, color: Colors.grey[600], fontWeight: FontWeight.w500),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildStudentsList() {
+  Widget _buildClassroomStudentsList() {
     return ListView.builder(
       itemCount: _classroomStudents.length,
       itemBuilder: (context, index) {
         final classroomStudent = _classroomStudents[index];
-        return _buildStudentCard(classroomStudent);
+        return _buildClassroomStudentCard(classroomStudent);
       },
     );
   }
 
-  Widget _buildStudentCard(ClassroomStudent classroomStudent) {
-    final student = classroomStudent.student;
-
-    return Card(
-      margin: const EdgeInsets.only(bottom: 15),
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildCardRow('Código:', student!.studentCode),
-          ],
+  Widget _buildClassroomStudentCard(ClassroomStudent classroomStudent) {
+    return InkWell(
+      /*onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ClassroomStudentsPage(classroom: classroom),
+          ),
+        );
+      },*/
+      child: Card(
+        margin: const EdgeInsets.only(bottom: 15),
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildCardRow('Aula:', classroomStudent.classroom!.name),
+            ],
+          ),
         ),
       ),
     );

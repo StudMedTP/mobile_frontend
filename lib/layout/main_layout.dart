@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_frontend/pages/classroom_students_student.dart';
 import 'package:mobile_frontend/pages/clinic_histories.dart';
 import 'package:mobile_frontend/pages/profile_page.dart';
 import '../pages/location_page.dart';
@@ -23,7 +24,8 @@ class _MainLayoutState extends State<MainLayout> {
     _pages = [
       const LocationPage(),                       // 0
       const ClinicHistoriesPage(),                // 1
-      const ProfilePage(role: "Student"),         // 2
+      const ClassroomStudentsStudentPage(),       // 2
+      const ProfilePage(role: "Student"),         // 3
     ];
   }
 
@@ -58,6 +60,7 @@ class _MainLayoutState extends State<MainLayout> {
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.location_on), label: "Location"),
         BottomNavigationBarItem(icon: Icon(Icons.local_hospital), label: "Clinic"),
+        BottomNavigationBarItem(icon: Icon(Icons.class_), label: "Classroom"),
         BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Profile"),
       ],
     );
