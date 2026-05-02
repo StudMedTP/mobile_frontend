@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_frontend/data/models/clinic_history.dart';
+import 'package:mobile_frontend/data/models/student.dart';
+import 'package:mobile_frontend/data/models/user.dart';
 import 'package:mobile_frontend/pages/data/http_helper.dart';
 
 class ClinicHistoriesPage extends StatefulWidget {
@@ -11,8 +13,10 @@ class ClinicHistoriesPage extends StatefulWidget {
 
 class _ClinicHistoriesPageState extends State<ClinicHistoriesPage> {
   late HttpHelper _httpHelper;
-  List<ClinicHistory> _clinicHistories = [];
   bool _isLoading = true;
+  List<ClinicHistory> _clinicHistories = [];
+  Student? _student;
+  User? _user;
 
   // Form controllers
   late TextEditingController _medicalHistoryNumberController;
@@ -44,6 +48,7 @@ class _ClinicHistoriesPageState extends State<ClinicHistoriesPage> {
     });
 
     _httpHelper = HttpHelper();
+
     final response = await _httpHelper.getClinicHistories();
 
     if (!mounted) return;
@@ -66,9 +71,32 @@ class _ClinicHistoriesPageState extends State<ClinicHistoriesPage> {
       _clinicHistories = [];
     }
 
+    final userResponse = await _httpHelper.getUser();
+
+    if (!mounted) return;
+
+    if (userResponse['status'] == 'error') {
+      _showErrorSnackBar(userResponse['message'] ?? 'Error al cargar perfil');
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
+
+    _user = User.fromJson(userResponse['user']);
+
+    await _loadStudentData(_user!.id);
+
     setState(() {
       _isLoading = false;
     });
+  }
+
+  Future<void> _loadStudentData(int userId) async {
+    final studentResponse = await _httpHelper.getStudentByUserId(userId);
+    if (studentResponse['status'] != 'error') {
+      _student = Student.fromJson(studentResponse['student']);
+    }
   }
 
   Future<void> _createClinicHistory() async {
@@ -84,6 +112,7 @@ class _ClinicHistoriesPageState extends State<ClinicHistoriesPage> {
         mainDiagnosis: _mainDiagnosisController.text.trim(),
         treatment: _treatmentController.text.trim(),
         analysis: _analysisController.text.trim(),
+        studentId: _student?.id ?? 0,
       );
 
       if (!mounted) return;

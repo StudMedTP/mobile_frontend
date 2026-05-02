@@ -200,6 +200,18 @@ class HttpHelper {
     }
   }
 
+  Future <Map<String, dynamic>> getStudentByUserId(int userId) async {
+    http.Response response = await http.get(
+        Uri.parse('$urlBase/microservice-user/students/user/$userId')
+    );
+    try {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        return jsonResponse;
+    } catch (e) {
+        return { 'status': 'error', 'message': 'Error en la peticion' };
+    }
+  }
+
   Future<Map<String, dynamic>> getClinicHistories() async {
     final pref = await _prefs;
     final token = pref.getString('token');
@@ -236,6 +248,7 @@ class HttpHelper {
     required String mainDiagnosis,
     required String treatment,
     required String analysis,
+    required int studentId,
   }) async {
     final pref = await _prefs;
     final token = pref.getString('token');
@@ -258,6 +271,7 @@ class HttpHelper {
           'mainDiagnosis': mainDiagnosis,
           'treatment': treatment,
           'analysis': analysis,
+          'studentId': studentId,
         }),
       );
 

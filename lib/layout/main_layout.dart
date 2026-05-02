@@ -13,7 +13,7 @@ class MainLayout extends StatefulWidget {
 class _MainLayoutState extends State<MainLayout> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  int _pageIndex = 0;
+  int _pageIndex = 2;
 
   late final List<Widget> _pages;
 
