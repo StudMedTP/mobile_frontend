@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocode/geocode.dart';
 import 'package:mobile_frontend/data/models/attendance.dart';
 import 'package:mobile_frontend/data/models/classroom_student.dart';
 import 'package:mobile_frontend/data/models/grade.dart';
@@ -23,6 +25,13 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
   bool _isLoading = true;
   List<Attendance> _attendances = [];
   List<Grade> _grades = [];
+  
+  // Variables para crear asistencia
+  double? _latitude;
+  double? _longitude;
+  late DateTime _attendanceDateTime;
+  String _addressString = 'Cargando ubicación...';
+  final TextEditingController _attendanceCodeController = TextEditingController();
 
   @override
   void initState() {
@@ -34,6 +43,7 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
   @override
   void dispose() {
     _tabController.dispose();
+    _attendanceCodeController.dispose();
     super.dispose();
   }
 
@@ -110,82 +120,278 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
     );
   }
 
-  void _showAddGradeDialog() {
-    final valueController = TextEditingController();
-    final descriptionController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Agregar Calificación'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: valueController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Calificación',
-                  hintText: 'Ej: 90',
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: descriptionController,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: 'Descripción',
-                  hintText: 'Descripción de la calificación',
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
-          ),
-          ElevatedButton(
-            onPressed: () => _createGrade(
-              valueController.text,
-              descriptionController.text,
-            ),
-            child: const Text('Guardar'),
-          ),
-        ],
-      ),
-    );
+  void _showAddAttendanceDialog() {
+    _attendanceCodeController.clear();
+    _getLocation();
   }
 
-  Future<void> _createGrade(String value, String description) async {
-    if (value.isEmpty || description.isEmpty) {
-      _showErrorSnackBar('Por favor completa todos los campos');
+  Future<void> _getLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      if (!mounted) return;
+      _showLocationErrorPopup();
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        if (!mounted) return;
+        _showLocationErrorPopup();
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      if (!mounted) return;
+      _showLocationErrorPopup();
       return;
     }
 
     try {
-      final gradeValue = int.parse(value);
-
-      final response = await _httpHelper.createGrade(
-        classroomStudentId: widget.classroomStudent.id,
-        value: gradeValue,
-        description: description,
+      Position pos = await Geolocator.getCurrentPosition(
+        locationSettings: LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
       );
+      setState(() {
+        _latitude = pos.latitude;
+        _longitude = pos.longitude;
+        _attendanceDateTime = DateTime.now();
+      });
+
+      await _getAddressFromCoordinates(pos.latitude, pos.longitude);
+
+      if (!mounted) return;
+      _showAttendanceConfirmationPopup();
+    } catch (e) {
+      if (!mounted) return;
+      _showLocationErrorPopup();
+    }
+  }
+
+  Future<void> _getAddressFromCoordinates(
+    double latitude,
+    double longitude,
+  ) async {
+    try {
+      final currentAddress = await GeoCode(
+        apiKey: '955629831226981577056x78046',
+      ).reverseGeocoding(
+        latitude: latitude,
+        longitude: longitude,
+      );
+
+      setState(() {
+        _addressString =
+            '${currentAddress.streetAddress}, ${currentAddress.city}, ${currentAddress.countryName}, ${currentAddress.postal}';
+      });
+    } catch (e) {
+      setState(() {
+        _addressString = '$latitude, $longitude';
+      });
+    }
+  }
+
+  void _showAttendanceConfirmationPopup() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        contentPadding: const EdgeInsets.all(20),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Registrar Asistencia',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 15),
+            Text(
+              'Se registrará tu asistencia con los siguientes datos:\n\n'
+              'Tu Ubicación: $_addressString\n'
+              'Fecha: ${_attendanceDateTime.day}/${_attendanceDateTime.month}/${_attendanceDateTime.year}\n'
+              'Hora: ${TimeOfDay.fromDateTime(_attendanceDateTime).format(context)}',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 20),
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                'Código:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(height: 5),
+            TextField(
+              controller: _attendanceCodeController,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                hintText: 'Ingrese código para registrar asistencia',
+                hintStyle: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 15,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Si no se encuentra en la ubicación correcta, '
+              'por favor intente más tarde para evitar un registro erróneo.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancelar', style: TextStyle(fontSize: 16)),
+                ),
+                ElevatedButton(
+                  onPressed: () => _createAttendance(
+                    _attendanceCodeController.text,
+                  ),
+                  child: const Text('Registrar', style: TextStyle(fontSize: 16)),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _createAttendance(String code) async {
+    if (code.isEmpty) {
+      _showErrorSnackBar('Por favor ingrese un código válido');
+      return;
+    }
+
+    try {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Verificando código...'),
+          duration: Duration(minutes: 1),
+        ),
+      );
+
+      final verifyResponse =
+          await _httpHelper.verifyTeacherDailyCode(
+            widget.classroomStudent.classroom!.teacherId,
+            code,
+          );
 
       if (!mounted) return;
 
-      if (response['status'] == 'error') {
-        _showErrorSnackBar(response['message'] ?? 'Error al crear calificación');
+      if (verifyResponse['status'] == 'error') {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        _showErrorSnackBar(verifyResponse['error'] ?? 'Código inválido');
+        return;
+      }
+
+      final attendanceResponse =
+          await _httpHelper.createAssitance(
+            studentId: widget.classroomStudent.student!.id,
+            teacherId: widget.classroomStudent.classroom!.teacherId,
+            classroomId: widget.classroomStudent.classroom!.id,
+            latitude: _latitude!,
+            longitude: _longitude!,
+          );
+
+      if (!mounted) return;
+
+      if (attendanceResponse['status'] == 'error') {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        _showErrorSnackBar(
+          attendanceResponse['error'] ??
+              'Error al registrar asistencia',
+        );
         return;
       }
 
       Navigator.pop(context);
-      await _loadGrades();
+      await _loadAttendances();
+      _showAttendanceSuccessPopup();
     } catch (e) {
-      _showErrorSnackBar('Error al crear calificación: $e');
+      ScaffoldMessenger.of(context).clearSnackBars();
+      _showErrorSnackBar('Error al registrar asistencia: $e');
     }
+  }
+
+  void _showLocationErrorPopup() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        contentPadding: const EdgeInsets.all(20),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Error de Ubicación',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'No se ha podido obtener su ubicación. Por favor, '
+              'revise las configuraciones de su dispositivo y '
+              'asegúrese de que los permisos de ubicación estén habilitados.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 25),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Aceptar', style: TextStyle(fontSize: 16)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showAttendanceSuccessPopup() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        contentPadding: const EdgeInsets.all(20),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Asistencia Registrada',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Su asistencia ha sido registrada correctamente',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 25),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Aceptar', style: TextStyle(fontSize: 16)),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -223,9 +429,9 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
               ],
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _showAddGradeDialog,
+        onPressed: _showAddAttendanceDialog,
         backgroundColor: Colors.blue,
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.location_on),
       ),
     );
   }

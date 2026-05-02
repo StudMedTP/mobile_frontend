@@ -43,14 +43,23 @@ class HttpHelper {
   }
 
   Future <Map<String, dynamic>> verifyTeacherDailyCode(int teacherId, String dailyCode) async {
-    http.Response response = await http.get(
-        Uri.parse('$urlBase/microservice-user/teachers/verifyDailyCode/$teacherId/$dailyCode')
-    );
     try {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      http.Response response = await http.get(
+          Uri.parse('$urlBase/microservice-user/teachers/verifyDailyCode/$teacherId/$dailyCode')
+      );
+
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return jsonResponse;
+      } else {
+        return {
+          'status': 'error',
+          'message': jsonResponse['message'] ?? 'Error al obtener estudiantes del aula'
+        };
+      }
     } catch (e) {
-        return { 'status': 'error', 'message': 'Error en la peticion' };
+      return {'status': 'error', 'message': 'Error en la petición: ${e.toString()}'};
     }
   }
 
@@ -110,23 +119,40 @@ class HttpHelper {
     }
   }
 
-  Future<Map<String, dynamic>> createAssitance(int studentId, int medicalCenterId, DateTime date) async {
-    http.Response response = await http.post(
-        Uri.parse('$urlBase/microservice-attendance/attendances'),
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: json.encode({
-            "studentId": studentId,
-            "medicalCenterId": medicalCenterId,
-            "date": date.toIso8601String(),
-        })
-    );
+  Future<Map<String, dynamic>> createAssitance({
+    required int studentId,
+    required int teacherId,
+    required int classroomId,
+    required double latitude,
+    required double longitude,
+  }) async {
     try {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      http.Response response = await http.post(
+          Uri.parse('$urlBase/microservice-attendance/attendances'),
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: json.encode({
+              "studentId": studentId,
+              "teacherId": teacherId,
+              "classroomId": classroomId,
+              "latitude": latitude,
+              "longitude": longitude,
+          })
+      );
+
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return jsonResponse;
+      } else {
+        return {
+          'status': 'error',
+          'message': jsonResponse['message'] ?? 'Error al crear historial clínico'
+        };
+      }
     } catch (e) {
-        return { 'status': 'error', 'message': 'Error en la peticion' };
+      return {'status': 'error', 'message': 'Error en la petición: ${e.toString()}'};
     }
   }
 

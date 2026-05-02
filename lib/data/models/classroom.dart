@@ -4,12 +4,14 @@ import 'package:mobile_frontend/data/models/teacher.dart';
 class Classroom {
   final int id;
   final String name;
+  final int teacherId;
   final MedicalCenter? medicalCenter;
   final Teacher? teacher;
 
   Classroom({
     required this.id,
     required this.name,
+    required this.teacherId,
     this.medicalCenter,
     this.teacher,
   });
@@ -18,6 +20,7 @@ class Classroom {
     return Classroom(
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
+      teacherId: json['teacherId'] ?? 0,
       medicalCenter: json['medicalCenterResource'] != null
           ? MedicalCenter.fromJson(json['medicalCenterResource'])
           : null,
