@@ -1,4 +1,3 @@
-import 'package:mobile_frontend/data/models/medical_center.dart';
 import 'package:mobile_frontend/data/models/teacher.dart';
 import 'package:mobile_frontend/data/models/student.dart';
 
@@ -7,7 +6,6 @@ class Attendance{
   late int studentId;
   late int teacherId;
   late Student student;
-  late MedicalCenter medicalcenter;
   late Teacher teacher;
   late DateTime createdAt;
   late double? latitude;
@@ -18,7 +16,6 @@ class Attendance{
     required this.studentId,
     required this.teacherId,
     required this.student,
-    required this.medicalcenter,
     required this.teacher,
     required this.createdAt,
     required this.latitude,
@@ -31,9 +28,6 @@ class Attendance{
     teacherId = json['teacherId'];
     if (json['studentResource'] != null) {
       student = Student.fromJson(json['studentResource']);
-    }
-    if (json['medicalCenterResource'] != null) {
-      medicalcenter = MedicalCenter.fromJson(json['medicalCenterResource']);
     }
     if (json['teacherResource'] != null) {
       teacher = Teacher.fromJson(json['teacherResource']);

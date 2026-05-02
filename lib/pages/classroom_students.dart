@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_frontend/data/models/classroom.dart';
 import 'package:mobile_frontend/data/models/classroom_student.dart';
 import 'package:mobile_frontend/pages/data/http_helper.dart';
+import 'package:mobile_frontend/pages/student_detail.dart';
 
 class ClassroomStudentsPage extends StatefulWidget {
   final Classroom classroom;

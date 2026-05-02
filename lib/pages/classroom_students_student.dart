@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_frontend/data/models/classroom_student.dart';
 import 'package:mobile_frontend/pages/data/http_helper.dart';
+import 'package:mobile_frontend/pages/student_detail_student.dart';
 
 class ClassroomStudentsStudentPage extends StatefulWidget {
   const ClassroomStudentsStudentPage({super.key});
@@ -145,7 +146,7 @@ class _ClassroomStudentsStudentPageState extends State<ClassroomStudentsStudentP
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => StudentDetailteacherPage(classroomStudent: classroomStudent),
+            builder: (context) => StudentDetailStudentPage(classroomStudent: classroomStudent),
           ),
         );
       },
