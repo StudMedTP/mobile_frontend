@@ -144,19 +144,29 @@ class _ClassroomStudentsPageState extends State<ClassroomStudentsPage> {
   Widget _buildStudentCard(ClassroomStudent classroomStudent) {
     final student = classroomStudent.student;
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 15),
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildCardRow('Código:', student!.studentCode),
-          ],
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => StudentDetailPage(classroomStudent: classroomStudent),
+          ),
+        );
+      },
+      child: Card(
+        margin: const EdgeInsets.only(bottom: 15),
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildCardRow('Código:', student!.studentCode),
+            ],
+          ),
         ),
-      ),
+      )
     );
   }
 

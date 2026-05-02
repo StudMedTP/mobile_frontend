@@ -141,14 +141,14 @@ class _ClassroomStudentsStudentPageState extends State<ClassroomStudentsStudentP
 
   Widget _buildClassroomStudentCard(ClassroomStudent classroomStudent) {
     return InkWell(
-      /*onTap: () {
+      onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ClassroomStudentsPage(classroom: classroom),
+            builder: (context) => StudentDetailteacherPage(classroomStudent: classroomStudent),
           ),
         );
-      },*/
+      },
       child: Card(
         margin: const EdgeInsets.only(bottom: 15),
         elevation: 3,
