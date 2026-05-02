@@ -46,7 +46,7 @@ class _StudentDetailPageState extends State<StudentDetailPage>
 
     await Future.wait([
       _loadAttendances(),
-      _loadGrades(),
+      _loadGrades(false),
     ]);
 
     setState(() {
@@ -79,7 +79,12 @@ class _StudentDetailPageState extends State<StudentDetailPage>
     }
   }
 
-  Future<void> _loadGrades() async {
+  Future<void> _loadGrades(bool refresh) async {
+    if (refresh) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
     final response =
         await _httpHelper.getGradesByClassroomStudent(
       widget.classroomStudent.id,
@@ -100,6 +105,11 @@ class _StudentDetailPageState extends State<StudentDetailPage>
     } catch (e) {
       _showErrorSnackBar('Error al procesar calificaciones: $e');
       _grades = [];
+    }
+    if (refresh) {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -185,7 +195,7 @@ class _StudentDetailPageState extends State<StudentDetailPage>
       }
 
       Navigator.pop(context);
-      await _loadGrades();
+      await _loadGrades(true);
     } catch (e) {
       _showErrorSnackBar('Error al crear calificación: $e');
     }

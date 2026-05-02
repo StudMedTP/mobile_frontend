@@ -55,7 +55,7 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
     _httpHelper = HttpHelper();
 
     await Future.wait([
-      _loadAttendances(),
+      _loadAttendances(false),
       _loadGrades(),
     ]);
 
@@ -64,7 +64,12 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
     });
   }
 
-  Future<void> _loadAttendances() async {
+  Future<void> _loadAttendances(bool refresh) async {
+    if (refresh) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
     final response =
         await _httpHelper.getMyAttendancesByClassroom(widget.classroomStudent.classroom!.id);
 
@@ -83,6 +88,11 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
     } catch (e) {
       _showErrorSnackBar('Error al procesar asistencias: $e');
       _attendances = [];
+    }
+    if (refresh) {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -282,13 +292,6 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
     }
 
     try {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Verificando código...'),
-          duration: Duration(minutes: 1),
-        ),
-      );
-
       final verifyResponse =
           await _httpHelper.verifyTeacherDailyCode(
             widget.classroomStudent.classroom!.teacherId,
@@ -298,8 +301,7 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
       if (!mounted) return;
 
       if (verifyResponse['status'] == 'error') {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        _showErrorSnackBar(verifyResponse['error'] ?? 'Código inválido');
+        _showErrorSnackBar(verifyResponse['message'] ?? 'Código inválido');
         return;
       }
 
@@ -315,19 +317,14 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
       if (!mounted) return;
 
       if (attendanceResponse['status'] == 'error') {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        _showErrorSnackBar(
-          attendanceResponse['error'] ??
-              'Error al registrar asistencia',
-        );
+        _showErrorSnackBar(attendanceResponse['error'] ?? 'Error al registrar asistencia');
         return;
       }
 
       Navigator.pop(context);
-      await _loadAttendances();
+      await _loadAttendances(true);
       _showAttendanceSuccessPopup();
     } catch (e) {
-      ScaffoldMessenger.of(context).clearSnackBars();
       _showErrorSnackBar('Error al registrar asistencia: $e');
     }
   }
