@@ -238,11 +238,7 @@ class _StudentItemState extends State<StudentItem> {
   
                 SizedBox(height: 10),
   
-                Text("Hora: ${TimeOfDay.fromDateTime(attendance!.date).format(context)}", style: TextStyle(fontSize: 18)),
-  
-                SizedBox(height: 10),
-  
-                Text("Estado: ${attendance?.status == 'PENDIENTE' ? 'Pendiente de atención' : attendance?.status == 'FIRMADO' ? 'Firmado' : 'No asistió'}", style: TextStyle(fontSize: 18)),
+                Text("Hora: ${TimeOfDay.fromDateTime(attendance!.createdAt).format(context)}", style: TextStyle(fontSize: 18)),
   
                 SizedBox(height: 10),
   

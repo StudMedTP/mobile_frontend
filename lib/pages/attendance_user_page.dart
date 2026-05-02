@@ -174,19 +174,14 @@ class _AttendanceItemState extends State<AttendanceItem> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.attendance.medicalcenter.name,
+                widget.attendance.teacher.teacherCode,
                 style: const TextStyle(
                   fontSize: 20, fontWeight: FontWeight.bold
                 )
               ),
               const SizedBox(height: 10),
-              Text("Fecha: ${widget.attendance.date.day}/${widget.attendance.date.month}/${widget.attendance.date.year}", style: TextStyle(fontSize: 18)),
-              Text("Hora: ${TimeOfDay.fromDateTime(widget.attendance.date).format(context)}", style: const TextStyle(fontSize: 18)),
-              const SizedBox(height: 10),
-              Text(
-                "Estado: ${widget.attendance.status == 'PENDIENTE' ? 'Pendiente de atención' : widget.attendance.status == 'FIRMADO' ? 'Firmado' : 'No asistió'}",
-                style: const TextStyle(fontSize: 18)
-              ),
+              Text("Fecha: ${widget.attendance.createdAt.day}/${widget.attendance.createdAt.month}/${widget.attendance.createdAt.year}", style: TextStyle(fontSize: 18)),
+              Text("Hora: ${TimeOfDay.fromDateTime(widget.attendance.createdAt).format(context)}", style: const TextStyle(fontSize: 18))
             ],
           ),
         ),
@@ -370,7 +365,7 @@ class _AttendanceItemState extends State<AttendanceItem> {
                           duration: Duration(minutes: 1),
                         )
                       );
-                      final Map<String, dynamic> response = await httpHelper.verifyTeacherDailyCode(widget.attendance.student.teacherId, _codigoController.text);
+                      final Map<String, dynamic> response = await httpHelper.verifyTeacherDailyCode(widget.attendance.student.id, _codigoController.text);
                       if (context.mounted) {
                         if (response['status'] == 'error') {
                           ScaffoldMessenger.of(context).clearSnackBars();
@@ -392,7 +387,7 @@ class _AttendanceItemState extends State<AttendanceItem> {
                                 )
                               );
                             } else {
-                              final Map<String, dynamic> response = await httpHelper.recordAttendance(widget.attendance.id, widget.attendance.student.teacherId, widget.attendance.studentId, _latitude!, _longitude!);
+                              final Map<String, dynamic> response = await httpHelper.recordAttendance(widget.attendance.id, widget.attendance.student.id, widget.attendance.studentId, _latitude!, _longitude!);
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).clearSnackBars();
                                 if (response['status'] == 'error') {

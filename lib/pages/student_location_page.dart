@@ -48,12 +48,12 @@ class _StudentLocationPageState extends State<StudentLocationPage> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "Fecha: ${widget.attendance.date.day}/${widget.attendance.date.month}/${widget.attendance.date.year}",
+                    "Fecha: ${widget.attendance.createdAt.day}/${widget.attendance.createdAt.month}/${widget.attendance.createdAt.year}",
                     style: const TextStyle(fontSize: 18),
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    "Hora: ${TimeOfDay.fromDateTime(widget.attendance.date).format(context)}",
+                    "Hora: ${TimeOfDay.fromDateTime(widget.attendance.createdAt).format(context)}",
                     style: const TextStyle(fontSize: 18),
                   ),
                 ],
@@ -63,44 +63,43 @@ class _StudentLocationPageState extends State<StudentLocationPage> {
             const SizedBox(height: 15),
 
             // --------- MAPA ----------
-            if (widget.attendance.status == 'FIRMADO')
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: FlutterMap(
-                    mapController: _mapController,
-                    options: MapOptions(
-                      initialCenter: center,
-                      initialZoom: 16,
-                    ),
-                    children: [
-                      TileLayer(
-                        urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                        subdomains: const ['a', 'b', 'c'],
-                        userAgentPackageName: 'com.example.app',
-                        tileProvider: NetworkTileProvider(headers: {
-                          'User-Agent': 'mi-app/1.0 (joserodrigolopez@icloud.com)',
-                          'Referer': 'https://localhost',
-                        }),
-                      ),
-                      MarkerLayer(
-                        markers: [
-                          Marker(
-                            point: center,
-                            width: 80,
-                            height: 80,
-                            child: const Icon(
-                              Icons.location_on,
-                              color: Colors.red,
-                              size: 48,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: FlutterMap(
+                  mapController: _mapController,
+                  options: MapOptions(
+                    initialCenter: center,
+                    initialZoom: 16,
                   ),
+                  children: [
+                    TileLayer(
+                      urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      subdomains: const ['a', 'b', 'c'],
+                      userAgentPackageName: 'com.example.app',
+                      tileProvider: NetworkTileProvider(headers: {
+                        'User-Agent': 'mi-app/1.0 (joserodrigolopez@icloud.com)',
+                        'Referer': 'https://localhost',
+                      }),
+                    ),
+                    MarkerLayer(
+                      markers: [
+                        Marker(
+                          point: center,
+                          width: 80,
+                          height: 80,
+                          child: const Icon(
+                            Icons.location_on,
+                            color: Colors.red,
+                            size: 48,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
+            ),
           ],
         ),
       ),

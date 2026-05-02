@@ -1,25 +1,26 @@
 import 'package:mobile_frontend/data/models/medicalCenter.dart';
+import 'package:mobile_frontend/data/models/teacher.dart';
 import 'package:mobile_frontend/data/models/student.dart';
 
 class Attendance{
   late int id;
   late int studentId;
-  late int medicalCenterId;
+  late int teacherId;
   late Student student;
   late MedicalCenter medicalcenter;
-  late String status;
-  late DateTime date;
+  late Teacher teacher;
+  late DateTime createdAt;
   late double? latitude;
   late double? longitude;
 
   Attendance({
     required this.id,
     required this.studentId,
-    required this.medicalCenterId,
+    required this.teacherId,
     required this.student,
     required this.medicalcenter,
-    required this.status,
-    required this.date,
+    required this.teacher,
+    required this.createdAt,
     required this.latitude,
     required this.longitude
   });
@@ -27,15 +28,17 @@ class Attendance{
   Attendance.fromJson(Map<String, dynamic> json){
     id = json['id'];
     studentId = json['studentId'];
-    medicalCenterId = json['medicalCenterId'];
+    teacherId = json['teacherId'];
     if (json['studentResource'] != null) {
       student = Student.fromJson(json['studentResource']);
     }
     if (json['medicalCenterResource'] != null) {
       medicalcenter = MedicalCenter.fromJson(json['medicalCenterResource']);
     }
-    status = json['status'];
-    date = DateTime.parse(json['date']);
+    if (json['teacherResource'] != null) {
+      teacher = Teacher.fromJson(json['teacherResource']);
+    }
+    createdAt = DateTime.parse(json['createdAt']);
     if (json['latitude'] != null) {
       latitude = json['latitude'].toDouble();
     }
