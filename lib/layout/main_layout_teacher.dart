@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_frontend/pages/classrooms.dart';
 import 'package:mobile_frontend/pages/profile_page.dart';
 
 class MainLayoutTeacher extends StatefulWidget {
@@ -20,7 +21,7 @@ class _MainLayoutTeacherState extends State<MainLayoutTeacher> {
     super.initState();
     _pages = [
       const ProfilePage(role: "Teacher"),
-      const ProfilePage(role: "Teacher"),
+      const ClassroomsPage(),
     ];
   }
 
@@ -54,7 +55,7 @@ class _MainLayoutTeacherState extends State<MainLayoutTeacher> {
       },
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Profile"),
-        BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Profile"),
+        BottomNavigationBarItem(icon: Icon(Icons.room), label: "Aulas"),
       ],
     );
   }

@@ -1,4 +1,4 @@
-import 'package:mobile_frontend/data/models/medicalCenter.dart';
+import 'package:mobile_frontend/data/models/medical_center.dart';
 import 'package:mobile_frontend/data/models/teacher.dart';
 import 'package:mobile_frontend/data/models/student.dart';
 
