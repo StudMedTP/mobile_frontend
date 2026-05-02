@@ -13,11 +13,8 @@ class Student{
 
   Student.fromJson(Map<String, dynamic> json){
     id = json['id'];
-    print(json['id']);
     studentCode = json['studentCode'];
-    print(json['studentCode']);
     if (json['userResource'] != null) {
-      print("Huh?");
       user = User.fromJson(json['userResource']);
     }
   }

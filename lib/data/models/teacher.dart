@@ -16,7 +16,9 @@ class Teacher{
   Teacher.fromJson(Map<String, dynamic> json){
     id = json['id'];
     teacherCode = json['teacherCode'];
-    dailyCode = json['dailyCode'];
+    if (json['dailyCode'] != null) {
+      dailyCode = json['dailyCode'];
+    }
     if (json['userResource'] != null) {
       user = User.fromJson(json['userResource']);
     }

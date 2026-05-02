@@ -28,31 +28,10 @@ class HttpHelper {
       }
   }
 
-  Future<Map<String, dynamic>> register(String firstName, String lastName, String email, String password) async {
-      http.Response response = await http.post(
-          Uri.parse('$urlBase/microservice-user/users'),
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: json.encode({
-              "firstName": firstName,
-              "lastName": lastName,
-              "email": email,
-              "password": password
-          })
-      );
-      try {
-          final Map<String, dynamic> jsonResponse = json.decode(response.body);
-          return jsonResponse;
-      } catch (e) {
-          return { 'status': 'error', 'message': 'Error en la peticion' };
-      }
-  }
-
   Future <Map<String, dynamic>> getAllMyAttendances() async {
     final pref = await _prefs; 
     http.Response response = await http.get(
-        Uri.parse('$urlBase/microservice-attendance/attendances/myObject'),
+        Uri.parse('$urlBase/microservice-attendance/attendances/myObject/classroom/1'),
         headers: {'Authorization': '${pref.getString('token')}'},
     );
     try {
@@ -218,6 +197,82 @@ class HttpHelper {
         return jsonResponse;
     } catch (e) {
         return { 'status': 'error', 'message': 'Error en la peticion' };
+    }
+  }
+
+  Future<Map<String, dynamic>> getClinicHistories() async {
+    final pref = await _prefs;
+    final token = pref.getString('token');
+    
+    if (token == null || token.isEmpty) {
+      return {'status': 'error', 'message': 'Token no disponible'};
+    }
+
+    try {
+      http.Response response = await http.get(
+        Uri.parse('$urlBase/microservice-evaluation/clinic-histories/myObject'),
+        headers: {'Authorization': token},
+      );
+
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonResponse;
+      } else {
+        return {
+          'status': 'error',
+          'message': jsonResponse['message'] ?? 'Error al obtener historias clínicas'
+        };
+      }
+    } catch (e) {
+      return {'status': 'error', 'message': 'Error en la petición: ${e.toString()}'};
+    }
+  }
+
+  Future<Map<String, dynamic>> createClinicHistory({
+    required String medicalHistoryNumber,
+    required int age,
+    required String sex,
+    required String mainDiagnosis,
+    required String treatment,
+    required String analysis,
+  }) async {
+    final pref = await _prefs;
+    final token = pref.getString('token');
+    
+    if (token == null || token.isEmpty) {
+      return {'status': 'error', 'message': 'Token no disponible'};
+    }
+
+    try {
+      http.Response response = await http.post(
+        Uri.parse('$urlBase/microservice-evaluation/clinic-histories'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token,
+        },
+        body: json.encode({
+          'medicalHistoryNumber': medicalHistoryNumber,
+          'age': age,
+          'sex': sex,
+          'mainDiagnosis': mainDiagnosis,
+          'treatment': treatment,
+          'analysis': analysis,
+        }),
+      );
+
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonResponse;
+      } else {
+        return {
+          'status': 'error',
+          'message': jsonResponse['message'] ?? 'Error al crear historial clínico'
+        };
+      }
+    } catch (e) {
+      return {'status': 'error', 'message': 'Error en la petición: ${e.toString()}'};
     }
   }
 }
