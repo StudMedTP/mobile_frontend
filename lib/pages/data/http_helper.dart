@@ -270,6 +270,27 @@ class HttpHelper {
     }
   }
 
+  Future<Map<String, dynamic>> getClassroomStudents(int classroomId) async {
+    try {
+      http.Response response = await http.get(
+        Uri.parse('$urlBase/microservice-evaluation/classroom-students/classroom/$classroomId'),
+      );
+
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonResponse;
+      } else {
+        return {
+          'status': 'error',
+          'message': jsonResponse['message'] ?? 'Error al obtener estudiantes del aula'
+        };
+      }
+    } catch (e) {
+      return {'status': 'error', 'message': 'Error en la petición: ${e.toString()}'};
+    }
+  }
+
   Future<Map<String, dynamic>> createClinicHistory({
     required String medicalHistoryNumber,
     required int age,
@@ -279,19 +300,11 @@ class HttpHelper {
     required String analysis,
     required int studentId,
   }) async {
-    final pref = await _prefs;
-    final token = pref.getString('token');
-    
-    if (token == null || token.isEmpty) {
-      return {'status': 'error', 'message': 'Token no disponible'};
-    }
-
     try {
       http.Response response = await http.post(
         Uri.parse('$urlBase/microservice-evaluation/clinic-histories'),
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token,
+          'Content-Type': 'application/json'
         },
         body: json.encode({
           'medicalHistoryNumber': medicalHistoryNumber,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_frontend/data/models/classroom.dart';
+import 'package:mobile_frontend/pages/classroom_students.dart';
 import 'package:mobile_frontend/pages/data/http_helper.dart';
 
 class ClassroomsPage extends StatefulWidget {
@@ -140,19 +141,29 @@ class _ClassroomsPageState extends State<ClassroomsPage> {
   }
 
   Widget _buildClassroomCard(Classroom classroom) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 15),
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildCardRow('Aula:', classroom.name),
-            //const SizedBox(height: 8),
-            //_buildCardRow('Capacidad:', '${classroom.capacity} estudiantes'),
-          ],
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ClassroomStudentsPage(classroom: classroom),
+          ),
+        );
+      },
+      child: Card(
+        margin: const EdgeInsets.only(bottom: 15),
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildCardRow('Aula:', classroom.name),
+              const SizedBox(height: 8),
+              _buildCardRow('Centro Médico:', '${classroom.medicalCenter?.name}'),
+            ],
+          ),
         ),
       ),
     );
