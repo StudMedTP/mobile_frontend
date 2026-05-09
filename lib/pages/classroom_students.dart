@@ -164,6 +164,8 @@ class _ClassroomStudentsPageState extends State<ClassroomStudentsPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildCardRow('Código:', student!.studentCode),
+              const SizedBox(height: 8),
+              _buildCardRow('Nombre:', '${student.user.firstName} ${student.user.lastName}'),
             ],
           ),
         ),

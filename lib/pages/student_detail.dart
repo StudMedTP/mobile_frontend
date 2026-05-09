@@ -256,6 +256,8 @@ class _StudentDetailPageState extends State<StudentDetailPage>
           children: [
             _buildInfoRow('Código:', student!.studentCode),
             const SizedBox(height: 8),
+            _buildInfoRow('Nombre:', '${student.user.firstName} ${student.user.lastName}'),
+            const SizedBox(height: 8),
             _buildInfoRow('Aula:', widget.classroomStudent.classroom!.name),
           ],
         ),

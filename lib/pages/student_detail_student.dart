@@ -507,7 +507,7 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
           children: [
             _buildInfoRow('Fecha:', _formatDate(attendance.createdAt)),
             const SizedBox(height: 4),
-            _buildInfoRow('Profesor:', attendance.teacher.teacherCode),
+            _buildInfoRow('Profesor:', '${attendance.teacher.user!.firstName} ${attendance.teacher.user!.lastName}'),
           ],
         ),
       ),

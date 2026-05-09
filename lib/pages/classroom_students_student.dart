@@ -160,6 +160,10 @@ class _ClassroomStudentsStudentPageState extends State<ClassroomStudentsStudentP
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildCardRow('Aula:', classroomStudent.classroom!.name),
+              const SizedBox(height: 8),
+              _buildCardRow('Centro Médico:', classroomStudent.classroom!.medicalCenter!.name),
+              const SizedBox(height: 8),
+              _buildCardRow('Profesor:', '${classroomStudent.classroom!.teacher!.user!.firstName} ${classroomStudent.classroom!.teacher!.user!.lastName}')
             ],
           ),
         ),
