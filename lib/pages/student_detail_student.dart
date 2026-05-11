@@ -23,6 +23,7 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
   late HttpHelper _httpHelper;
   late TabController _tabController;
   bool _isLoading = true;
+  bool _attendancesExpanded = true;
   List<Attendance> _attendances = [];
   List<Grade> _grades = [];
   
@@ -428,7 +429,7 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddAttendanceDialog,
         backgroundColor: Colors.blue,
-        child: const Icon(Icons.location_on),
+        child: const Icon(Icons.fact_check),
       ),
     );
   }
@@ -444,7 +445,7 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildInfoRow('Código:', student!.studentCode),
+            _buildInfoRow('Código del estudiante:', student!.studentCode),
             const SizedBox(height: 8),
             _buildInfoRow('Aula:', widget.classroomStudent.classroom!.name),
           ],
@@ -481,7 +482,56 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
               'No hay asistencias registradas',
               Icons.event_busy,
             )
-          : _buildAttendancesList(),
+          : Column(
+              children: [
+                _buildAttendancesHeader(),
+                const SizedBox(height: 12),
+                Expanded(
+                  child: _attendancesExpanded
+                      ? _buildAttendancesList()
+                      : const SizedBox.shrink(),
+                ),
+              ],
+            ),
+    );
+  }
+
+  Widget _buildAttendancesHeader() {
+    return Material(
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            _attendancesExpanded = !_attendancesExpanded;
+          });
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Asistencias (${_attendances.length})',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              Icon(
+                _attendancesExpanded
+                    ? Icons.expand_less
+                    : Icons.expand_more,
+                color: Colors.white,
+                size: 24,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

@@ -21,6 +21,7 @@ class _StudentDetailPageState extends State<StudentDetailPage>
   late HttpHelper _httpHelper;
   late TabController _tabController;
   bool _isLoading = true;
+  bool _attendancesExpanded = true;
   List<Attendance> _attendances = [];
   List<Grade> _grades = [];
 
@@ -254,7 +255,7 @@ class _StudentDetailPageState extends State<StudentDetailPage>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildInfoRow('Código:', student!.studentCode),
+            _buildInfoRow('Código del estudiante:', student!.studentCode),
             const SizedBox(height: 8),
             _buildInfoRow('Nombre:', '${student.user.firstName} ${student.user.lastName}'),
             const SizedBox(height: 8),
@@ -293,7 +294,56 @@ class _StudentDetailPageState extends State<StudentDetailPage>
               'No hay asistencias registradas',
               Icons.event_busy,
             )
-          : _buildAttendancesList(),
+          : Column(
+              children: [
+                _buildAttendancesHeader(),
+                const SizedBox(height: 12),
+                Expanded(
+                  child: _attendancesExpanded
+                      ? _buildAttendancesList()
+                      : const SizedBox.shrink(),
+                ),
+              ],
+            ),
+    );
+  }
+
+  Widget _buildAttendancesHeader() {
+    return Material(
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            _attendancesExpanded = !_attendancesExpanded;
+          });
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Asistencias (${_attendances.length})',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              Icon(
+                _attendancesExpanded
+                    ? Icons.expand_less
+                    : Icons.expand_more,
+                color: Colors.white,
+                size: 24,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

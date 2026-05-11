@@ -54,7 +54,7 @@ class _MainLayoutTeacherState extends State<MainLayoutTeacher> {
         });
       },
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.room), label: "Aulas"),
+        BottomNavigationBarItem(icon: Icon(Icons.school), label: "Aulas"),
         BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Profile"),
       ],
     );
