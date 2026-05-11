@@ -33,6 +33,7 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
   late DateTime _attendanceDateTime;
   String _addressString = 'Cargando ubicación...';
   final TextEditingController _attendanceCodeController = TextEditingController();
+  bool _isSubmittingAttendance = false;
 
   @override
   void initState() {
@@ -131,6 +132,36 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
     );
   }
 
+  void _showErrorPopup(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        contentPadding: const EdgeInsets.all(20),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 25),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Aceptar', style: TextStyle(fontSize: 16)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _showAddAttendanceDialog() {
     _attendanceCodeController.clear();
     _getLocation();
@@ -211,86 +242,103 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
   void _showAttendanceConfirmationPopup() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        contentPadding: const EdgeInsets.all(20),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'Registrar Asistencia',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 15),
-            Text(
-              'Se registrará tu asistencia con los siguientes datos:\n\n'
-              'Tu Ubicación: $_addressString\n'
-              'Fecha: ${_attendanceDateTime.day}/${_attendanceDateTime.month}/${_attendanceDateTime.year}\n'
-              'Hora: ${TimeOfDay.fromDateTime(_attendanceDateTime).format(context)}',
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 20),
-            Align(
-              alignment: Alignment.center,
-              child: Text(
-                'Código:',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          contentPadding: const EdgeInsets.all(20),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Registrar Asistencia',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-            ),
-            const SizedBox(height: 5),
-            TextField(
-              controller: _attendanceCodeController,
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                hintText: 'Ingrese código para registrar asistencia',
-                hintStyle: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 15,
+              const SizedBox(height: 15),
+              Text(
+                'Se registrará tu asistencia con los siguientes datos:\n\n'
+                'Tu Ubicación: $_addressString\n'
+                'Fecha: ${_attendanceDateTime.day}/${_attendanceDateTime.month}/${_attendanceDateTime.year}\n'
+                'Hora: ${TimeOfDay.fromDateTime(_attendanceDateTime).format(context)}',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 20),
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  'Código:',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Si no se encuentra en la ubicación correcta, '
-              'por favor intente más tarde para evitar un registro erróneo.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Cancelar', style: TextStyle(fontSize: 16)),
-                ),
-                ElevatedButton(
-                  onPressed: () => _createAttendance(
-                    _attendanceCodeController.text,
+              const SizedBox(height: 5),
+              TextField(
+                controller: _attendanceCodeController,
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                  hintText: 'Ingrese código para registrar asistencia',
+                  hintStyle: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
                   ),
-                  child: const Text('Registrar', style: TextStyle(fontSize: 16)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 15,
+                  ),
                 ),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Si no se encuentra en la ubicación correcta, '
+                'por favor intente más tarde para evitar un registro erróneo.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Cancelar', style: TextStyle(fontSize: 16)),
+                  ),
+                  ElevatedButton(
+                    onPressed: _isSubmittingAttendance
+                        ? null
+                        : () => _createAttendance(
+                          _attendanceCodeController.text,
+                          setState,
+                        ),
+                    child: _isSubmittingAttendance
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Text('Registrar', style: TextStyle(fontSize: 16)),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Future<void> _createAttendance(String code) async {
+  Future<void> _createAttendance(String code, StateSetter setState) async {
     if (code.isEmpty) {
-      _showErrorSnackBar('Por favor ingrese un código válido');
+      _showErrorPopup('Error', 'Por favor ingrese un código válido');
       return;
     }
+
+    setState(() {
+      _isSubmittingAttendance = true;
+    });
 
     try {
       final verifyResponse =
@@ -299,10 +347,18 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
             code,
           );
 
-      if (!mounted) return;
+      if (!mounted) {
+        setState(() {
+          _isSubmittingAttendance = false;
+        });
+        return;
+      }
 
       if (verifyResponse['status'] == 'error') {
-        _showErrorSnackBar(verifyResponse['message'] ?? 'Código inválido');
+        setState(() {
+          _isSubmittingAttendance = false;
+        });
+        _showErrorPopup('Error', verifyResponse['message'] ?? 'Código inválido');
         return;
       }
 
@@ -315,18 +371,34 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
             longitude: _longitude!,
           );
 
-      if (!mounted) return;
+      if (!mounted) {
+        setState(() {
+          _isSubmittingAttendance = false;
+        });
+        return;
+      }
 
       if (attendanceResponse['status'] == 'error') {
-        _showErrorSnackBar(attendanceResponse['error'] ?? 'Error al registrar asistencia');
+        setState(() {
+          _isSubmittingAttendance = false;
+        });
+        _showErrorPopup('Error', attendanceResponse['message'] ?? 'Error al registrar asistencia');
         return;
       }
 
       Navigator.pop(context);
       await _loadAttendances(true);
       _showAttendanceSuccessPopup();
+      setState(() {
+        _isSubmittingAttendance = false;
+      });
     } catch (e) {
-      _showErrorSnackBar('Error al registrar asistencia: $e');
+      if (mounted) {
+        setState(() {
+          _isSubmittingAttendance = false;
+        });
+        _showErrorPopup('Error', 'Error al registrar asistencia: $e');
+      }
     }
   }
 

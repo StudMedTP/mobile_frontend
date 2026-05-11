@@ -55,7 +55,7 @@ class HttpHelper {
       } else {
         return {
           'status': 'error',
-          'message': jsonResponse['message'] ?? 'Error al obtener estudiantes del aula'
+          'message': jsonResponse['error'] ?? 'Error al obtener estudiantes del aula'
         };
       }
     } catch (e) {
@@ -148,7 +148,7 @@ class HttpHelper {
       } else {
         return {
           'status': 'error',
-          'message': jsonResponse['message'] ?? 'Error al crear historial clínico'
+          'message': jsonResponse['error'] ?? 'Error al crear historial clínico'
         };
       }
     } catch (e) {

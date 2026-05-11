@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geocode/geocode.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -13,6 +14,7 @@ class LocationPage extends StatefulWidget {
 class _LocationPageState extends State<LocationPage> {
   double? _latitude;
   double? _longitude;
+  String _addressString = 'Cargando ubicación...';
   String _status = 'Esperando acción';
 
   final MapController _mapController = MapController();
@@ -50,9 +52,35 @@ class _LocationPageState extends State<LocationPage> {
         _longitude = pos.longitude;
         _status = 'Posición obtenida';
       });
+
+      await _getAddressFromCoordinates(pos.latitude, pos.longitude);
+
       _mapController.move(LatLng(_latitude!, _longitude!), 15.0);
     } catch (e) {
       setState(() => _status = 'Error: $e');
+    }
+  }
+
+  Future<void> _getAddressFromCoordinates(
+    double latitude,
+    double longitude,
+  ) async {
+    try {
+      final currentAddress = await GeoCode(
+        apiKey: '955629831226981577056x78046',
+      ).reverseGeocoding(
+        latitude: latitude,
+        longitude: longitude,
+      );
+
+      setState(() {
+        _addressString =
+            '${currentAddress.streetAddress}, ${currentAddress.city}, ${currentAddress.countryName}, ${currentAddress.postal}';
+      });
+    } catch (e) {
+      setState(() {
+        _addressString = '$latitude, $longitude';
+      });
     }
   }
 
@@ -112,6 +140,7 @@ class _LocationPageState extends State<LocationPage> {
                 Text(_status),
                 const SizedBox(height: 8),
                 if (hasLocation) ...[
+                  Text('Dirección: $_addressString'),
                   Text('Latitud: $_latitude'),
                   Text('Longitud: $_longitude'),
                 ],
