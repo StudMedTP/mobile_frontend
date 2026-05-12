@@ -162,6 +162,64 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
     );
   }
 
+  void _showWrongCodePopup() {
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          contentPadding: const EdgeInsets.all(20),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Código Incorrecto',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'El código ingresado es incorrecto.\n\n'
+                '¿Desea intentar de nuevo o proceder registrando una asistencia parcial?',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 25),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Intentar de Nuevo', style: TextStyle(fontSize: 14)),
+                  ),
+                  ElevatedButton(
+                    onPressed: _isSubmittingAttendance
+                        ? null
+                        : () => _createPartialAttendance(setState),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange,
+                    ),
+                    child: _isSubmittingAttendance
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Text(
+                            'Proceder',
+                            style: TextStyle(fontSize: 14),
+                          ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   void _showAddAttendanceDialog() {
     _attendanceCodeController.clear();
     _getLocation();
@@ -358,7 +416,11 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
         setState(() {
           _isSubmittingAttendance = false;
         });
-        _showErrorPopup('Error', verifyResponse['message'] ?? 'Código inválido');
+        if (verifyResponse['message'] == 'Código incorecto') {
+          _showWrongCodePopup();
+        } else {
+          _showErrorPopup('Error', verifyResponse['message'] ?? 'Código inválido');
+        }
         return;
       }
 
@@ -369,6 +431,7 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
             classroomId: widget.classroomStudent.classroom!.id,
             latitude: _latitude!,
             longitude: _longitude!,
+            isPartial: false,
           );
 
       if (!mounted) {
@@ -386,6 +449,55 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
         return;
       }
 
+      Navigator.pop(context);
+      await _loadAttendances(true);
+      _showAttendanceSuccessPopup();
+      setState(() {
+        _isSubmittingAttendance = false;
+      });
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isSubmittingAttendance = false;
+        });
+        _showErrorPopup('Error', 'Error al registrar asistencia: $e');
+      }
+    }
+  }
+
+  Future<void> _createPartialAttendance(StateSetter setState) async {
+    setState(() {
+      _isSubmittingAttendance = true;
+    });
+
+    try {
+      final attendanceResponse =
+          await _httpHelper.createAssitance(
+            studentId: widget.classroomStudent.student!.id,
+            teacherId: widget.classroomStudent.classroom!.teacherId,
+            classroomId: widget.classroomStudent.classroom!.id,
+            latitude: _latitude!,
+            longitude: _longitude!,
+            isPartial: true,
+          );
+
+      if (!mounted) {
+        setState(() {
+          _isSubmittingAttendance = false;
+        });
+        return;
+      }
+
+      if (attendanceResponse['status'] == 'error') {
+        setState(() {
+          _isSubmittingAttendance = false;
+        });
+        Navigator.pop(context);
+        _showErrorPopup('Error', attendanceResponse['message'] ?? 'Error al registrar asistencia');
+        return;
+      }
+
+      Navigator.pop(context);
       Navigator.pop(context);
       await _loadAttendances(true);
       _showAttendanceSuccessPopup();
@@ -630,6 +742,8 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
             _buildInfoRow('Fecha:', _formatDate(attendance.createdAt)),
             const SizedBox(height: 4),
             _buildInfoRow('Profesor:', '${attendance.teacher.user!.firstName} ${attendance.teacher.user!.lastName}'),
+            const SizedBox(height: 4),
+            _buildInfoRow('Tipo:', attendance.isPartial ? 'Parcial' : 'Completa'),
           ],
         ),
       ),

@@ -10,6 +10,7 @@ class Attendance{
   late DateTime createdAt;
   late double? latitude;
   late double? longitude;
+  late bool isPartial;
 
   Attendance({
     required this.id,
@@ -19,13 +20,15 @@ class Attendance{
     required this.teacher,
     required this.createdAt,
     required this.latitude,
-    required this.longitude
+    required this.longitude,
+    required this.isPartial
   });
 
   Attendance.fromJson(Map<String, dynamic> json){
     id = json['id'];
     studentId = json['studentId'];
     teacherId = json['teacherId'];
+    isPartial = json['isPartial'];
     if (json['studentResource'] != null) {
       student = Student.fromJson(json['studentResource']);
     }

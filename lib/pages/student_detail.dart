@@ -370,6 +370,8 @@ class _StudentDetailPageState extends State<StudentDetailPage>
             _buildInfoRow('Fecha:', _formatDate(attendance.createdAt)),
             const SizedBox(height: 4),
             _buildInfoRow('Profesor:', attendance.teacher.teacherCode),
+            const SizedBox(height: 4),
+            _buildInfoRow('Tipo:', attendance.isPartial ? 'Parcial' : 'Completa'),
           ],
         ),
       ),

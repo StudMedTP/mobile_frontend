@@ -125,6 +125,7 @@ class HttpHelper {
     required int classroomId,
     required double latitude,
     required double longitude,
+    required bool isPartial
   }) async {
     try {
       http.Response response = await http.post(
@@ -138,6 +139,7 @@ class HttpHelper {
               "classroomId": classroomId,
               "latitude": latitude,
               "longitude": longitude,
+              "isPartial": isPartial
           })
       );
 
