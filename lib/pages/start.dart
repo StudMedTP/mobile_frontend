@@ -9,6 +9,9 @@ class Start extends StatefulWidget {
 }
 
 class _StartState extends State<Start> {
+
+  Color _backgroundColor = Colors.white;
+
   @override
   void initState(){
     super.initState();
@@ -17,6 +20,7 @@ class _StartState extends State<Start> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: _backgroundColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

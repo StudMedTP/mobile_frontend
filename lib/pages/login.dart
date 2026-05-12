@@ -17,6 +17,9 @@ class _LoginState extends State<Login> {
   static const double _inputWidth = 0.80;
   static const double _logoSize = 150.0;
 
+  // Background color for this page — change this value later as needed.
+  Color _backgroundColor = Colors.white;
+
   late HttpHelper _httpHelper;
   bool _isLoading = false;
   late SharedPreferences _prefs;
@@ -158,6 +161,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: _backgroundColor,
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Center(
