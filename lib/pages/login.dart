@@ -12,13 +12,13 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  static const Color _primaryColor = Color(0xFF50B1D8);
-  static const Color _darkColor = Color.fromRGBO(10, 36, 63, 1);
+  static const Color _primaryColor = Color(0xFF00897B);
+  static const Color _darkColor = Color.fromRGBO(255, 255, 255, 1);
   static const double _inputWidth = 0.80;
   static const double _logoSize = 150.0;
 
   // Background color for this page — change this value later as needed.
-  Color _backgroundColor = Colors.white;
+  final Color _backgroundColor = Colors.white;
 
   late HttpHelper _httpHelper;
   bool _isLoading = false;
@@ -257,6 +257,7 @@ class _LoginState extends State<Login> {
       onPressed: _isLoading ? null : _handleLogin,
       style: ElevatedButton.styleFrom(
         backgroundColor: _primaryColor,
+        foregroundColor: Colors.white,
         disabledBackgroundColor: Colors.grey[400],
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
         shape: RoundedRectangleBorder(
@@ -266,7 +267,7 @@ class _LoginState extends State<Login> {
       child: Text(
         _isLoading ? 'Iniciando sesión...' : 'Ingresar',
         style: const TextStyle(
-          color: _darkColor,
+          color: Colors.white,
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),

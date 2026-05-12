@@ -16,7 +16,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  static const Color primaryColor = Color(0xFF448AFF);
+  static const Color primaryColor = Color(0xFF00897B);
   static const Color secondaryColor = Color(0xFF0A243F);
   static const Color accentColor = Color(0xFFFFC107);
   static const Color backgroundColor = Color(0xFFF5F7FA);
@@ -173,7 +173,7 @@ class _ProfilePageState extends State<ProfilePage> {
           height: 120,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [primaryColor, Color(0xFF1976D2)],
+              colors: [primaryColor, Color(0xFF00695C)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),

@@ -581,9 +581,10 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
     return Scaffold(
       appBar: AppBar(
         title: Text('Estudiante'),
-        backgroundColor: Colors.blue,
+        backgroundColor: const Color(0xFF00897B),
         foregroundColor: Colors.white,
         bottom: TabBar(
+          labelColor: Colors.white,
           controller: _tabController,
           tabs: const [
             Tab(text: 'Asistencias'),
@@ -612,7 +613,8 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddAttendanceDialog,
-        backgroundColor: Colors.blue,
+        backgroundColor: const Color(0xFF00897B),
+        foregroundColor: Colors.white,
         child: const Icon(Icons.fact_check),
       ),
     );
@@ -691,7 +693,7 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
           decoration: BoxDecoration(
-            color: Colors.blue,
+            color: const Color(0xFF00897B),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
@@ -790,7 +792,7 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue,
+                    color: Color(0xFF00897B),
                   ),
                 ),
               ],

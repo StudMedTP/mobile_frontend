@@ -76,7 +76,7 @@ class _ClassroomStudentsPageState extends State<ClassroomStudentsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Estudiantes - ${widget.classroom.name}'),
-        backgroundColor: Colors.blue,
+        backgroundColor: const Color(0xFF00897B),
         foregroundColor: Colors.white,
       ),
       body: SafeArea(

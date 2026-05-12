@@ -10,7 +10,7 @@ class Start extends StatefulWidget {
 
 class _StartState extends State<Start> {
 
-  Color _backgroundColor = Colors.white;
+  final Color _backgroundColor = Colors.white;
 
   @override
   void initState(){
@@ -56,8 +56,8 @@ class _StartState extends State<Start> {
                   );
                 },
                 style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all<Color>(const Color.fromRGBO(30, 161, 210, 1)),
-                  foregroundColor: WidgetStateProperty.all<Color>(const Color.fromRGBO(10, 36, 63, 1))
+                  backgroundColor: WidgetStateProperty.all<Color>(const Color(0xFF00897B)),
+                  foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
                 ),
                 child: const Text('Iniciar Sesión')
               )

@@ -46,10 +46,10 @@ class _MainLayoutState extends State<MainLayout> {
   // -----------------------------------------
   Widget _buildNavbar() {
     return BottomNavigationBar(
-      backgroundColor: Colors.lightBlue[200],
+      backgroundColor: const Color(0xFF00897B),
       type: BottomNavigationBarType.fixed,
-      selectedItemColor: Colors.black,
-      unselectedItemColor: Colors.black,
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Colors.white70,
       showSelectedLabels: false,
       showUnselectedLabels: false,
       onTap: (index) {

@@ -196,7 +196,7 @@ class _ClinicHistoriesPageState extends State<ClinicHistoriesPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Colors.lightBlue[200],
+        backgroundColor: const Color(0xFF00897B),
         insetPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 24),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         contentPadding: const EdgeInsets.all(20),
@@ -253,7 +253,7 @@ class _ClinicHistoriesPageState extends State<ClinicHistoriesPage> {
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            color: const Color(0xFF448AFF),
+            color: const Color(0xFF00897B),
             borderRadius: BorderRadius.circular(12),
           ),
           child: TextField(
@@ -293,7 +293,7 @@ class _ClinicHistoriesPageState extends State<ClinicHistoriesPage> {
         ElevatedButton(
           onPressed: _createClinicHistory,
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF448AFF),
+            backgroundColor: const Color(0xFF00897B),
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),
@@ -341,7 +341,7 @@ class _ClinicHistoriesPageState extends State<ClinicHistoriesPage> {
         ElevatedButton(
           onPressed: _showAddClinicHistoryDialog,
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF448AFF),
+            backgroundColor: const Color(0xFF00897B),
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),

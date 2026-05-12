@@ -13,7 +13,7 @@ class ClassroomsPage extends StatefulWidget {
 }
 
 class _ClassroomsPageState extends State<ClassroomsPage> {
-  static const Color primaryColor = Color(0xFF448AFF);
+  static const Color primaryColor = Color(0xFF00897B);
   static const Color accentColor = Color(0xFFFFC107);
 
   late HttpHelper _httpHelper;
