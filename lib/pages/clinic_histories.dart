@@ -253,7 +253,7 @@ class _ClinicHistoriesPageState extends State<ClinicHistoriesPage> {
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            color: const Color(0xFF00897B),
+            color: const Color.fromARGB(255, 255, 255, 255),
             borderRadius: BorderRadius.circular(12),
           ),
           child: TextField(
@@ -261,10 +261,10 @@ class _ClinicHistoriesPageState extends State<ClinicHistoriesPage> {
             keyboardType: keyboardType,
             maxLines: maxLines,
             minLines: maxLines == 1 ? 1 : null,
-            style: const TextStyle(color: Colors.white, fontSize: 14),
+            style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 14),
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: const TextStyle(color: Colors.white70),
+              hintStyle: const TextStyle(color: Color.fromARGB(179, 0, 0, 0)),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             ),
