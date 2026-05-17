@@ -24,6 +24,7 @@ class _StudentDetailPageState extends State<StudentDetailPage>
   bool _attendancesExpanded = true;
   List<Attendance> _attendances = [];
   List<Grade> _grades = [];
+  bool _isUpdatingAttendance = false;
 
   @override
   void initState() {
@@ -46,7 +47,7 @@ class _StudentDetailPageState extends State<StudentDetailPage>
     _httpHelper = HttpHelper();
 
     await Future.wait([
-      _loadAttendances(),
+      _loadAttendances(false),
       _loadGrades(false),
     ]);
 
@@ -55,7 +56,12 @@ class _StudentDetailPageState extends State<StudentDetailPage>
     });
   }
 
-  Future<void> _loadAttendances() async {
+  Future<void> _loadAttendances(bool refresh) async {
+    if (refresh) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
     final response =
         await _httpHelper.getAttendancesByStudentAndClassroom(
       widget.classroomStudent.student!.id,
@@ -77,6 +83,11 @@ class _StudentDetailPageState extends State<StudentDetailPage>
     } catch (e) {
       _showErrorSnackBar('Error al procesar asistencias: $e');
       _attendances = [];
+    }
+    if (refresh) {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -199,6 +210,72 @@ class _StudentDetailPageState extends State<StudentDetailPage>
       await _loadGrades(true);
     } catch (e) {
       _showErrorSnackBar('Error al crear calificación: $e');
+    }
+  }
+
+  void _showUpdateAttendanceDialog(Attendance attendance) {
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Text('Actualizar Asistencia'),
+          content: const Text('¿Desea actualizar esta asistencia a completa?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: _isUpdatingAttendance
+                ? null
+                : () => _updateAttendance(attendance.id, setState),
+              child: _isUpdatingAttendance
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  )
+                : Text('Sí'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _updateAttendance(int attendanceId, StateSetter setState) async {
+    setState(() {
+      _isUpdatingAttendance = true;
+    });
+
+    try {
+
+      final response = await _httpHelper.updateAttendance(attendanceId);
+
+      if (!mounted) {
+        setState(() {
+          _isUpdatingAttendance = false;
+        });
+        return;
+      }
+
+      if (response['status'] == 'error') {
+        setState(() {
+          _isUpdatingAttendance = false;
+        });
+        _showErrorSnackBar(response['message'] ?? 'Error al actualizar asistencia');
+        return;
+      }
+
+      Navigator.pop(context);
+      await _loadAttendances(true);
+      setState(() {
+        _isUpdatingAttendance = false;
+      });
+    } catch (e) {
+      _showErrorSnackBar('Error al actualizar asistencia: $e');
     }
   }
 
@@ -360,21 +437,26 @@ class _StudentDetailPageState extends State<StudentDetailPage>
   }
 
   Widget _buildAttendanceCard(Attendance attendance) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildInfoRow('Fecha:', _formatDate(attendance.createdAt)),
-            const SizedBox(height: 4),
-            _buildInfoRow('Profesor:', attendance.teacher.teacherCode),
-            const SizedBox(height: 4),
-            _buildInfoRow('Tipo:', attendance.isPartial ? 'Parcial' : 'Completa'),
-          ],
+    return GestureDetector(
+      onTap: attendance.isPartial
+          ? () => _showUpdateAttendanceDialog(attendance)
+          : null,
+      child: Card(
+        margin: const EdgeInsets.only(bottom: 12),
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildInfoRow('Fecha:', _formatDate(attendance.createdAt)),
+              const SizedBox(height: 4),
+              _buildInfoRow('Profesor:', attendance.teacher.teacherCode),
+              const SizedBox(height: 4),
+              _buildInfoRow('Tipo:', attendance.isPartial ? 'Parcial' : 'Completa'),
+            ],
+          ),
         ),
       ),
     );

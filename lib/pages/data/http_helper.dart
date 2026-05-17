@@ -70,7 +70,7 @@ class HttpHelper {
           'Content-Type': 'application/json',
         },
         body: json.encode({
-          "status": "FIRMADO"
+          "isPartial": false
         })
     );
     try {
