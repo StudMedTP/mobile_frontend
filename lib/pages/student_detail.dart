@@ -269,11 +269,11 @@ class _StudentDetailPageState extends State<StudentDetailPage>
         return;
       }
 
-      Navigator.pop(context);
-      await _loadAttendances(true);
       setState(() {
         _isUpdatingAttendance = false;
       });
+      Navigator.pop(context);
+      await _loadAttendances(true);
     } catch (e) {
       _showErrorSnackBar('Error al actualizar asistencia: $e');
     }
