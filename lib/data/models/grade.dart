@@ -4,12 +4,14 @@ class Grade {
   final int id;
   final int value;
   final String description;
+  final DateTime createdAt;
   final ClassroomStudent? classroomStudent;
 
   Grade({
     required this.id,
     required this.value,
     required this.description,
+    required this.createdAt,
     required this.classroomStudent,
   });
 
@@ -18,6 +20,9 @@ class Grade {
       id: json['id'] ?? 0,
       value: json['value'] ?? 0,
       description: json['description'] ?? '',
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
       classroomStudent: json['classroomStudentResource'] != null
           ? ClassroomStudent.fromJson(json['classroomStudentResource'])
           : null,

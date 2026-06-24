@@ -20,7 +20,31 @@ class _LocationPageState extends State<LocationPage> {
   final MapController _mapController = MapController();
 
   Future<void> _getLocation() async {
-    setState(() => _status = 'Comprobando permisos...');
+    if (true) {
+      setState(() => _status = 'Obteniendo posición...');
+
+      await Future.delayed(const Duration(seconds: 3));
+
+      const fakeLatitude = -12.197340;
+      const fakeLongitude = -77.008637;
+
+      setState(() {
+        _latitude = fakeLatitude;
+        _longitude = fakeLongitude;
+        _status = 'Posición obtenida';
+      });
+
+      await _getAddressFromCoordinates(fakeLatitude, fakeLongitude);
+
+      _mapController.move(
+        LatLng(fakeLatitude, fakeLongitude),
+        15.0,
+      );
+
+      return;
+    }
+
+    /*setState(() => _status = 'Comprobando permisos...');
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -58,7 +82,7 @@ class _LocationPageState extends State<LocationPage> {
       _mapController.move(LatLng(_latitude!, _longitude!), 15.0);
     } catch (e) {
       setState(() => _status = 'Error: $e');
-    }
+    }*/
   }
 
   Future<void> _getAddressFromCoordinates(

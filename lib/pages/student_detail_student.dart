@@ -226,7 +226,30 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
   }
 
   Future<void> _getLocation() async {
-    bool serviceEnabled;
+    if (true) {
+      await Future.delayed(const Duration(seconds: 3));
+
+      const fakeLatitude = -12.197340;
+      const fakeLongitude = -77.008637;
+
+      setState(() {
+        _latitude = fakeLatitude;
+        _longitude = fakeLongitude;
+        _attendanceDateTime = DateTime.now();
+      });
+
+      await _getAddressFromCoordinates(
+        fakeLatitude,
+        fakeLongitude,
+      );
+
+      if (!mounted) return;
+
+      _showAttendanceConfirmationPopup();
+      return;
+    }
+
+    /*bool serviceEnabled;
     LocationPermission permission;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -271,7 +294,7 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
     } catch (e) {
       if (!mounted) return;
       _showLocationErrorPopup();
-    }
+    }*/
   }
 
   Future<void> _getAddressFromCoordinates(
@@ -798,7 +821,7 @@ class _StudentDetailStudentPageState extends State<StudentDetailStudentPage>
               ],
             ),
             const SizedBox(height: 8),
-            _buildInfoRow('Descripción:', grade.description),
+            _buildInfoRow('Fecha:', _formatDate(grade.createdAt)),
           ],
         ),
       ),

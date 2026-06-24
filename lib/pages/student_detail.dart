@@ -508,7 +508,7 @@ class _StudentDetailPageState extends State<StudentDetailPage>
               ],
             ),
             const SizedBox(height: 8),
-            _buildInfoRow('Descripción:', grade.description),
+            _buildInfoRow('Fecha:', _formatDate(grade.createdAt)),
           ],
         ),
       ),
